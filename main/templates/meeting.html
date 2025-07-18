@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+  <div class="page-heading header-text">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <span class="breadcrumb"><a href="{% url 'home' %}">Home</a>  /  Meeting</span>
+          <h3>Schedule a meeting</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <section class="ticket-section section-padding">
+    <div class="section-overlay"></div>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-6 col-10 mx-auto">
+                <form class="custom-form ticket-form mb-5 mb-lg-0" action="https://formspree.io/f/xrbknpbw"
+  method="POST" role="form">
+                    <h2 class="text-center mb-4">Schedule a Meeting with Brain Swarm</h2>
+
+                    <div class="ticket-form-body">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <input type="text" name="ticket-form-name" id="ticket-form-name" class="form-control" placeholder="Your Full Name" required>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <input type="email" name="ticket-form-email" id="ticket-form-email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Your Email Address" required>
+                            </div>
+                        </div>
+
+                        <input type="tel" class="form-control" name="ticket-form-phone" placeholder="Phone (e.g. 0300-123-4567)" pattern="[0-9]{4}-[0-9]{3}-[0-9]{4}" required="">
+
+                        <h6>Meeting Purpose</h6>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-check form-control">
+                                    <input class="form-check-input" type="radio" name="TicketForm" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Buy Robotics Kit
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-check form-check-radio form-control">
+                                    <input class="form-check-input" type="radio" name="TicketForm" id="flexRadioDefault2">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Discuss Custom Project
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="text" name="ticket-form-number" id="ticket-form-number" class="form-control" placeholder="Preferred Meeting Date (e.g. 2025-07-12)" required>
+
+                        <textarea name="ticket-form-message" rows="3" class="form-control" id="ticket-form-message" placeholder="Any specific requirements or notes?"></textarea>
+
+                        <div class="col-lg-4 col-md-10 col-8 mx-auto">
+                            <button type="submit" class="form-control">Schedule</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
