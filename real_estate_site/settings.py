@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-u7=xh!%wn%59#t3)kj3v#rtk9u#w=1f#dm29ukz-3gm(oj2gw2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*.herokuapp.com', '*.hostinger.com']  # Add your domain here for production
 
 
 # Application definition
@@ -117,6 +117,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'main/static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # For production deployment
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
