@@ -1,0 +1,37 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Static files collection
+/staticfiles/
+/static/
+
+# Virtual environment
+venv/
+env/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Django migrations (optional, usually you want to include them)
+# */migrations/*
+
+# Media files (if you add user uploads later)
+media/
+
+# Template backups (created during conversion)
+main/templates_backup/
+main/templates/*_old.html
