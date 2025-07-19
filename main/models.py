@@ -44,3 +44,38 @@ class Contributor(models.Model):
     
     def __str__(self):
         return f"{self.name} - {self.blog.title}"
+
+
+class FormSubmission(models.Model):
+    """Model to store all form submissions from the website"""
+    FORM_TYPE_CHOICES = [
+        ('contact', 'Contact Form'),
+        ('meeting', 'Meeting Scheduling Form'),
+        ('home', 'Home Page Contact Form'),
+    ]
+    
+    MEETING_PURPOSE_CHOICES = [
+        ('buy_kit', 'Buy Robotics Kit'),
+        ('custom_project', 'Discuss Custom Project'),
+    ]
+    
+    # Required fields for all forms
+    form_type = models.CharField(max_length=20, choices=FORM_TYPE_CHOICES, help_text="Type of form submitted")
+    name = models.CharField(max_length=100, help_text="Full name of the submitter")
+    email = models.EmailField(help_text="Email address of the submitter")
+    message = models.TextField(blank=True, help_text="Message or additional notes")
+    submitted_at = models.DateTimeField(auto_now_add=True, help_text="When the form was submitted")
+    
+    # Optional fields for specific form types
+    subject = models.CharField(max_length=200, blank=True, help_text="Subject line (for contact forms)")
+    phone = models.CharField(max_length=20, blank=True, help_text="Phone number (for meeting forms)")
+    meeting_purpose = models.CharField(max_length=20, choices=MEETING_PURPOSE_CHOICES, blank=True, help_text="Purpose of the meeting")
+    preferred_date = models.CharField(max_length=50, blank=True, help_text="Preferred meeting date")
+    
+    class Meta:
+        ordering = ['-submitted_at']
+        verbose_name = "Form Submission"
+        verbose_name_plural = "Form Submissions"
+    
+    def __str__(self):
+        return f"{self.get_form_type_display()} - {self.name} ({self.submitted_at.strftime('%Y-%m-%d %H:%M')})"

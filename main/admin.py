@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Blog, Contributor
+from .models import Profile, Blog, Contributor, FormSubmission
 
 
 @admin.register(Profile)
@@ -40,3 +40,33 @@ class ContributorAdmin(admin.ModelAdmin):
     def has_module_permission(self, request):
         """Only allow admin users to access this module"""
         return request.user.is_authenticated and hasattr(request.user, 'profile') and request.user.profile.is_admin
+
+
+@admin.register(FormSubmission)
+class FormSubmissionAdmin(admin.ModelAdmin):
+    list_display = ['form_type', 'name', 'email', 'subject', 'submitted_at']
+    list_filter = ['form_type', 'submitted_at', 'meeting_purpose']
+    search_fields = ['name', 'email', 'subject', 'message']
+    readonly_fields = ['submitted_at']
+    date_hierarchy = 'submitted_at'
+    ordering = ['-submitted_at']
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('form_type', 'name', 'email', 'submitted_at')
+        }),
+        ('Contact Details', {
+            'fields': ('subject', 'message'),
+            'classes': ('collapse',)
+        }),
+        ('Meeting Details', {
+            'fields': ('phone', 'meeting_purpose', 'preferred_date'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def get_readonly_fields(self, request, obj=None):
+        """Make all fields readonly except for staff notes if needed"""
+        if obj:  # editing an existing object
+            return ['form_type', 'name', 'email', 'subject', 'message', 'phone', 'meeting_purpose', 'preferred_date', 'submitted_at']
+        return ['submitted_at']

@@ -4,19 +4,49 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from .models import Blog, Profile
-from .forms import SignUpForm, BlogForm
+from .forms import SignUpForm, BlogForm, ContactForm, MeetingForm
 
 
 # Create your views here.
 
 def home(request):
-    return render(request, 'index.html')
+    """Home page with contact form"""
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save(form_type='home')
+            messages.success(request, 'Thank you for your message! We will get back to you soon.')
+            return redirect('home')
+    else:
+        form = ContactForm()
+    
+    return render(request, 'index.html', {'contact_form': form})
 
 def contact(request):
-    return render(request, 'contact.html')
+    """Contact page with contact form"""
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save(form_type='contact')
+            messages.success(request, 'Thank you for contacting us! We will respond to your inquiry soon.')
+            return redirect('contact')
+    else:
+        form = ContactForm()
+    
+    return render(request, 'contact.html', {'contact_form': form})
 
 def meeting(request):
-    return render(request, 'meeting.html')
+    """Meeting scheduling page with meeting form"""
+    if request.method == 'POST':
+        form = MeetingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Thank you for scheduling a meeting! We will contact you to confirm the details.')
+            return redirect('meeting')
+    else:
+        form = MeetingForm()
+    
+    return render(request, 'meeting.html', {'meeting_form': form})
 
 def properties(request):
     return render(request, 'properties.html')
