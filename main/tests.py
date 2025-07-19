@@ -89,3 +89,125 @@ class ProfileCreationTestCase(TestCase):
         
         # Verify only one profile exists
         self.assertEqual(Profile.objects.filter(user=user).count(), 1)
+
+
+class EmailValidationTestCase(TestCase):
+    """Test case for email uniqueness validation in signup"""
+    
+    def test_signup_form_prevents_duplicate_email(self):
+        """Test that SignUpForm prevents signup with duplicate email"""
+        # Create a user first
+        User.objects.create_user(
+            username='existinguser',
+            email='existing@example.com',
+            password='testpass123'
+        )
+        
+        # Try to create another user with the same email
+        form_data = {
+            'username': 'newuser',
+            'email': 'existing@example.com',  # Same email
+            'full_name': 'New User',
+            'password1': 'testpass123',
+            'password2': 'testpass123'
+        }
+        
+        form = SignUpForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('email', form.errors)
+        self.assertEqual(
+            form.errors['email'][0], 
+            "An account with this email already exists."
+        )
+    
+    def test_signup_form_allows_unique_email(self):
+        """Test that SignUpForm allows signup with unique email"""
+        form_data = {
+            'username': 'uniqueuser',
+            'email': 'unique@example.com',
+            'full_name': 'Unique User',
+            'password1': 'testpass123',
+            'password2': 'testpass123'
+        }
+        
+        form = SignUpForm(data=form_data)
+        self.assertTrue(form.is_valid())
+        
+        # Should be able to save successfully
+        user = form.save()
+        self.assertEqual(user.email, 'unique@example.com')
+        self.assertEqual(user.username, 'uniqueuser')
+    
+    def test_signup_form_case_insensitive_email_check(self):
+        """Test that email validation is case-insensitive"""
+        # Create a user with lowercase email
+        User.objects.create_user(
+            username='existinguser',
+            email='test@example.com',
+            password='testpass123'
+        )
+        
+        # Try to create another user with uppercase email
+        form_data = {
+            'username': 'newuser',
+            'email': 'TEST@EXAMPLE.COM',  # Different case
+            'full_name': 'New User',
+            'password1': 'testpass123',
+            'password2': 'testpass123'
+        }
+        
+        form = SignUpForm(data=form_data)
+        # Django's email field automatically converts to lowercase
+        # So this should still trigger our validation
+        self.assertFalse(form.is_valid())
+        self.assertIn('email', form.errors)
+
+
+class DefaultAdminTestCase(TestCase):
+    """Test case for default admin creation"""
+    
+    def test_default_admin_creation_command(self):
+        """Test that the management command creates default admin correctly"""
+        from django.core.management import call_command
+        from io import StringIO
+        
+        # Run the command
+        out = StringIO()
+        call_command('create_default_admin', stdout=out)
+        
+        # Check that admin user was created
+        admin_user = User.objects.get(email='rb.brain.swarm@gmail.com')
+        self.assertEqual(admin_user.username, 'rb.brain.swarm@gmail.com')
+        self.assertTrue(admin_user.is_superuser)
+        self.assertTrue(admin_user.is_staff)
+        
+        # Check that profile was created and marked as admin
+        self.assertTrue(hasattr(admin_user, 'profile'))
+        self.assertTrue(admin_user.profile.is_admin)
+        self.assertEqual(admin_user.profile.full_name, 'Brain Swarm Admin')
+        
+        # Check command output
+        self.assertIn('Successfully created admin user', out.getvalue())
+    
+    def test_default_admin_command_prevents_duplicate(self):
+        """Test that the command doesn't create duplicate admin"""
+        from django.core.management import call_command
+        from io import StringIO
+        
+        # Create admin user first
+        User.objects.create_superuser(
+            username='rb.brain.swarm@gmail.com',
+            email='rb.brain.swarm@gmail.com',
+            password='existingpass'
+        )
+        
+        # Run the command
+        out = StringIO()
+        call_command('create_default_admin', stdout=out)
+        
+        # Check that no duplicate was created
+        admin_users = User.objects.filter(email='rb.brain.swarm@gmail.com')
+        self.assertEqual(admin_users.count(), 1)
+        
+        # Check command output
+        self.assertIn('already exists', out.getvalue())

@@ -30,12 +30,20 @@ class SignUpForm(UserCreationForm):
         self.fields['password1'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Enter password'})
         self.fields['password2'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Confirm password'})
     
+    def clean_email(self):
+        """Validate that email is unique (case-insensitive)"""
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("An account with this email already exists.")
+        return email
+    
     def save(self, commit=True):
         """
         Save the user and update the profile created by the signal.
         
         The signal automatically creates a Profile when the User is saved.
         This method updates that profile with additional form data.
+        Also handles the case where a user exists but profile is missing.
         """
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
