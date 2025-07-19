@@ -80,7 +80,7 @@ def blog_create(request):
         return HttpResponseForbidden("You don't have permission to create blog posts.")
     
     if request.method == 'POST':
-        form = BlogForm(request.POST)
+        form = BlogForm(request.POST, request.FILES)
         if form.is_valid():
             blog = form.save(commit=False)
             blog.author = request.user
@@ -103,7 +103,7 @@ def blog_edit(request, blog_id):
     blog = get_object_or_404(Blog, id=blog_id)
     
     if request.method == 'POST':
-        form = BlogForm(request.POST, instance=blog)
+        form = BlogForm(request.POST, request.FILES, instance=blog)
         if form.is_valid():
             form.save()
             messages.success(request, 'Blog post updated successfully!')

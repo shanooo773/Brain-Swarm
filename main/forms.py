@@ -74,8 +74,9 @@ class BlogForm(forms.ModelForm):
     """Form for creating and editing blog posts"""
     class Meta:
         model = Blog
-        fields = ('title', 'content')
+        fields = ('title', 'content', 'image')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter blog title'}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 10, 'placeholder': 'Write your blog content here...'})
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 10, 'placeholder': 'Write your blog content here...'}),
+            'image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'})
         }
