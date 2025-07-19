@@ -14,9 +14,18 @@
         {% endfor %}
     {% endif %}
     
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
+    <div class="row">
+        <!-- Main Content Column -->
+        <div class="col-lg-{% if blog.contributors.exists %}8{% else %}12{% endif %}">
             <article class="blog-post">
+                <!-- Featured Image -->
+                {% if blog.image %}
+                    <div class="featured-image mb-4">
+                        <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="img-fluid rounded">
+                    </div>
+                {% endif %}
+                
+                <!-- Blog Header -->
                 <header class="mb-4">
                     <h1 class="display-4 mb-3">{{ blog.title }}</h1>
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -43,10 +52,12 @@
                     <hr>
                 </header>
                 
+                <!-- Blog Content -->
                 <div class="blog-content">
                     {{ blog.content|linebreaks }}
                 </div>
                 
+                <!-- Blog Footer -->
                 <footer class="mt-5 pt-4 border-top">
                     <div class="d-flex justify-content-between align-items-center">
                         <a href="{% url 'blog_list' %}" class="btn btn-outline-secondary">
@@ -62,6 +73,41 @@
                 </footer>
             </article>
         </div>
+        
+        <!-- Contributors Sidebar -->
+        {% if blog.contributors.exists %}
+            <div class="col-lg-4">
+                <div class="contributors-sidebar">
+                    <div class="sidebar-card">
+                        <h4 class="sidebar-title">Contributors</h4>
+                        <div class="contributors-list">
+                            {% for contributor in blog.contributors.all %}
+                                <div class="contributor-item">
+                                    <h6 class="contributor-name">{{ contributor.name }}</h6>
+                                    <div class="contributor-links">
+                                        {% if contributor.email %}
+                                            <a href="mailto:{{ contributor.email }}" class="contributor-link" title="Email">
+                                                <i class="bi bi-envelope"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if contributor.github %}
+                                            <a href="{{ contributor.github }}" target="_blank" class="contributor-link" title="GitHub">
+                                                <i class="bi bi-github"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if contributor.linkedin %}
+                                            <a href="{{ contributor.linkedin }}" target="_blank" class="contributor-link" title="LinkedIn">
+                                                <i class="bi bi-linkedin"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </div>
 
@@ -73,6 +119,13 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.featured-image img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
 .blog-content {
     font-size: 1.1rem;
     line-height: 1.7;
@@ -81,6 +134,66 @@
 
 .blog-meta {
     font-size: 0.95rem;
+}
+
+.contributors-sidebar {
+    position: sticky;
+    top: 120px;
+}
+
+.sidebar-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #ff6b6b;
+}
+
+.sidebar-title {
+    color: #333;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    border-bottom: 2px solid #f8f9fa;
+    padding-bottom: 0.5rem;
+}
+
+.contributor-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.contributor-item:last-child {
+    border-bottom: none;
+}
+
+.contributor-name {
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.contributor-links {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.contributor-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.contributor-link:hover {
+    background-color: #ff6b6b;
+    color: white;
+    transform: translateY(-2px);
 }
 
 .btn-outline-secondary {
@@ -112,6 +225,17 @@
 .btn-outline-danger:hover {
     background-color: #dc3545;
     border-color: #dc3545;
+}
+
+@media (max-width: 991.98px) {
+    .contributors-sidebar {
+        position: static;
+        margin-top: 2rem;
+    }
+    
+    .featured-image img {
+        height: 200px;
+    }
 }
 </style>
 {% endblock %}
