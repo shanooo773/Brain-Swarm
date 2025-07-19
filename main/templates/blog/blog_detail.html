@@ -21,7 +21,7 @@
                 <!-- Featured Image -->
                 {% if blog.image %}
                     <div class="featured-image mb-4">
-                        <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="img-fluid rounded">
+                        <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="img-fluid rounded expandable-image" data-full-src="{{ blog.image.url }}">
                     </div>
                 {% endif %}
                 
@@ -124,6 +124,62 @@
     height: 300px;
     object-fit: cover;
     border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.expandable-image {
+    position: relative;
+}
+
+.expandable-image:hover {
+    transform: scale(1.05);
+    z-index: 1;
+}
+
+/* Full size image overlay */
+.image-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.image-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.image-overlay img {
+    max-width: 95vw;
+    max-height: 95vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.image-overlay .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 10000;
+    transition: transform 0.2s ease;
+}
+
+.image-overlay .close-btn:hover {
+    transform: scale(1.2);
 }
 
 .blog-content {
@@ -238,4 +294,50 @@
     }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Create overlay for full-size image display
+    const overlay = document.createElement('div');
+    overlay.className = 'image-overlay';
+    overlay.innerHTML = '<span class="close-btn">&times;</span><img src="" alt="">';
+    document.body.appendChild(overlay);
+
+    const overlayImg = overlay.querySelector('img');
+    const closeBtn = overlay.querySelector('.close-btn');
+
+    // Handle expandable image clicks
+    document.querySelectorAll('.expandable-image').forEach(img => {
+        img.addEventListener('click', function() {
+            const fullSrc = this.getAttribute('data-full-src') || this.src;
+            overlayImg.src = fullSrc;
+            overlayImg.alt = this.alt;
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        });
+    });
+
+    // Close overlay when clicking close button
+    closeBtn.addEventListener('click', function() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto'; // Restore scrolling
+    });
+
+    // Close overlay when clicking outside the image
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+    });
+
+    // Close overlay with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+    });
+});
+</script>
 {% endblock %}
