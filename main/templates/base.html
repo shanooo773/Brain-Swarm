@@ -79,9 +79,28 @@
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
                             <li><a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Home</a></li>
+                            <li><a href="{% url 'blog_list' %}" {% if 'blog' in request.resolver_match.url_name %}class="active"{% endif %}>Blog</a></li>
                             <li><a href="{% url 'properties' %}">Our Team </a></li>
                             <li><a href="{% url 'property-details' %}">Support</a></li>
                             <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                            
+                            {% if user.is_authenticated %}
+                                {% if user.profile.is_admin %}
+                                    <li><a href="{% url 'blog_create' %}"><i class="fa fa-plus"></i> New Blog</a></li>
+                                {% endif %}
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class="fa fa-user"></i> {{ user.username }}
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'sign_out' %}">Sign Out</a></li>
+                                    </ul>
+                                </li>
+                            {% else %}
+                                <li><a href="{% url 'sign_in' %}">Sign In</a></li>
+                                <li><a href="{% url 'sign_up' %}">Sign Up</a></li>
+                            {% endif %}
+                            
                             <li><a href="{% url 'meeting' %}"><i class="fa fa-calendar"></i> Schedule a meeting</a></li>
                         </ul>   
                         <a class='menu-trigger'>
@@ -239,5 +258,66 @@
     <script src="{% static 'js/custom.js' %}"></script>
 
     {% block extra_js %}{% endblock %}
+    
+    <!-- Custom dropdown styles -->
+    <style>
+    .dropdown {
+        position: relative;
+    }
+    
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        min-width: 160px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        border-radius: 8px;
+        border: none;
+        z-index: 1000;
+        margin-top: 5px;
+    }
+    
+    .dropdown-menu.show {
+        display: block;
+    }
+    
+    .dropdown-item {
+        padding: 8px 16px;
+        color: #333;
+        text-decoration: none;
+        display: block;
+        border-radius: 6px;
+        margin: 4px;
+    }
+    
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #ff6b6b;
+    }
+    </style>
+    
+    <script>
+    // Simple dropdown toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropdownToggle = document.querySelector('.dropdown-toggle');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        
+        if (dropdownToggle && dropdownMenu) {
+            dropdownToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                dropdownMenu.classList.toggle('show');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>
