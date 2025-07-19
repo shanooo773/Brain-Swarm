@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ blog.title }} - Brain Swarm{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <article class="blog-post">
+                <header class="mb-4">
+                    <h1 class="display-4 mb-3">{{ blog.title }}</h1>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="blog-meta">
+                            <span class="text-muted">
+                                <i class="bi bi-person"></i> {{ blog.author.username }}
+                            </span>
+                            <span class="text-muted ms-3">
+                                <i class="bi bi-calendar"></i> {{ blog.publish_date|date:"F d, Y" }}
+                            </span>
+                        </div>
+                        
+                        {% if user.is_authenticated and user.profile.is_admin %}
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'blog_edit' blog.id %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+                                <a href="{% url 'blog_delete' blog.id %}" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <hr>
+                </header>
+                
+                <div class="blog-content">
+                    {{ blog.content|linebreaks }}
+                </div>
+                
+                <footer class="mt-5 pt-4 border-top">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'blog_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Blog
+                        </a>
+                        
+                        {% if blog.updated_at != blog.created_at %}
+                            <small class="text-muted">
+                                Last updated: {{ blog.updated_at|date:"M d, Y g:i A" }}
+                            </small>
+                        {% endif %}
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </div>
+</div>
+
+<style>
+.blog-post {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.blog-content {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #333;
+}
+
+.blog-meta {
+    font-size: 0.95rem;
+}
+
+.btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-outline-warning {
+    border-color: #ffc107;
+    color: #ffc107;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+}
+
+.btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+</style>
+{% endblock %}
