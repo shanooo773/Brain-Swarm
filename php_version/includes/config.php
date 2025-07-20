@@ -17,6 +17,7 @@ define('SITE_EMAIL', 'admin@brainswarm.com');
 // Upload directories
 define('UPLOAD_DIR', 'uploads/');
 define('BLOG_IMAGES_DIR', UPLOAD_DIR . 'blog_images/');
+define('EVENT_IMAGES_DIR', UPLOAD_DIR . 'event_images/');
 define('PROFILE_PICS_DIR', UPLOAD_DIR . 'profile_pics/');
 
 // Security settings

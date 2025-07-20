@@ -47,7 +47,7 @@ ob_start();
                         <?php if (!empty($event['image'])): ?>
                             <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
                                  alt="<?php echo htmlspecialchars($event['title']); ?>" 
-                                 class="card-img-top expandable-image" 
+                                 class="card-img-top expandable-image event-image" 
                                  data-full-src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>">
                         <?php endif; ?>
                         <div class="card-body d-flex flex-column">
@@ -115,7 +115,16 @@ $extra_css = '
 }
 
 .card:hover .card-img-top {
-    transform: scale(1.05);
+    transform: scale(1.1);
+}
+
+.event-image {
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+.event-image:hover {
+    transform: scale(1.1);
 }
 
 .expandable-image {
