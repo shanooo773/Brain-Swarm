@@ -29,6 +29,10 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                                 <i class="fa fa-user"></i> <?php echo htmlspecialchars($current_user['username']); ?>
                             </a>
                             <ul class="dropdown-menu">
+                                <?php if ($is_admin): ?>
+                                    <li><a class="dropdown-item" href="<?php echo smartUrl('admin/index.php'); ?>">Admin Dashboard</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                <?php endif; ?>
                                 <li><a class="dropdown-item" href="<?php echo smartUrl('sign-out.php'); ?>">Sign Out</a></li>
                             </ul>
                         </li>
