@@ -12,6 +12,7 @@ $db = Database::getInstance();
 $stats = [
     'total_events' => $db->fetch("SELECT COUNT(*) as count FROM event")['count'],
     'total_users' => $db->fetch("SELECT COUNT(*) as count FROM users")['count'],
+    'total_contributors' => $db->fetch("SELECT COUNT(*) as count FROM contributors")['count'],
     'total_submissions' => $db->fetch("SELECT COUNT(*) as count FROM form_submissions")['count'],
     'recent_submissions' => $db->fetch("SELECT COUNT(*) as count FROM form_submissions WHERE submitted_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)")['count']
 ];
@@ -82,6 +83,22 @@ ob_start();
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
+                            <h4><?php echo $stats['total_contributors']; ?></h4>
+                            <p class="card-text">Total Contributors</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-person-plus" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
                             <h4><?php echo $stats['total_submissions']; ?></h4>
                             <p class="card-text">Form Submissions</p>
                         </div>
@@ -137,6 +154,11 @@ ob_start();
                         <div class="col-md-3 mb-2">
                             <a href="<?php echo smartUrl('admin/users.php'); ?>" class="btn btn-outline-info w-100">
                                 <i class="bi bi-people"></i> Manage Users
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="<?php echo smartUrl('admin/contributors.php'); ?>" class="btn btn-outline-secondary w-100">
+                                <i class="bi bi-person-plus"></i> Manage Contributors
                             </a>
                         </div>
                     </div>
