@@ -129,5 +129,5 @@ ob_start();
 $content = ob_get_clean();
 
 // Include the base template
-include 'templates/base.php';
+include 'templates/base_enhanced.php';
 ?>

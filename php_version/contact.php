@@ -47,7 +47,7 @@ ob_start();
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <span class="breadcrumb"><a href="<?php echo url(); ?>">Home</a> / Contact Us</span>
+                <span class="breadcrumb"><a href="<?php echo smartUrl(); ?>">Home</a> / Contact Us</span>
                 <h3>Contact Us</h3>
             </div>
         </div>
@@ -146,6 +146,6 @@ ob_start();
 // Get the content
 $content = ob_get_clean();
 
-// Include the base template
-include 'templates/base.php';
+// Include the enhanced base template
+include 'templates/base_enhanced.php';
 ?>
