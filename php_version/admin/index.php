@@ -10,18 +10,18 @@ $page_title = 'Admin Dashboard - Brain Swarm';
 $db = Database::getInstance();
 
 $stats = [
-    'total_blogs' => $db->fetch("SELECT COUNT(*) as count FROM blogs")['count'],
+    'total_events' => $db->fetch("SELECT COUNT(*) as count FROM event")['count'],
     'total_users' => $db->fetch("SELECT COUNT(*) as count FROM users")['count'],
     'total_submissions' => $db->fetch("SELECT COUNT(*) as count FROM form_submissions")['count'],
     'recent_submissions' => $db->fetch("SELECT COUNT(*) as count FROM form_submissions WHERE submitted_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)")['count']
 ];
 
-// Get recent blog posts
-$recent_blogs = $db->fetchAll(
-    "SELECT b.*, u.username as author_username 
-     FROM blogs b 
-     LEFT JOIN users u ON b.author_id = u.id 
-     ORDER BY b.created_at DESC 
+// Get recent events
+$recent_events = $db->fetchAll(
+    "SELECT e.*, u.username as author_username 
+     FROM event e 
+     LEFT JOIN users u ON e.author_id = u.id 
+     ORDER BY e.created_at DESC 
      LIMIT 5"
 );
 
@@ -50,8 +50,8 @@ ob_start();
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4><?php echo $stats['total_blogs']; ?></h4>
-                            <p class="card-text">Total Blog Posts</p>
+                            <h4><?php echo $stats['total_events']; ?></h4>
+                            <p class="card-text">Total Event Posts</p>
                         </div>
                         <div class="align-self-center">
                             <i class="bi bi-journal-text" style="font-size: 2rem;"></i>
@@ -120,13 +120,13 @@ ob_start();
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3 mb-2">
-                            <a href="<?php echo smartUrl('blog/create.php'); ?>" class="btn btn-primary w-100">
-                                <i class="bi bi-plus-lg"></i> Create Blog Post
+                            <a href="<?php echo smartUrl('event/create.php'); ?>" class="btn btn-primary w-100">
+                                <i class="bi bi-plus-lg"></i> Create Event Post
                             </a>
                         </div>
                         <div class="col-md-3 mb-2">
-                            <a href="<?php echo smartUrl('admin/blogs.php'); ?>" class="btn btn-outline-primary w-100">
-                                <i class="bi bi-journal-text"></i> Manage Blogs
+                            <a href="<?php echo smartUrl('admin/events.php'); ?>" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-journal-text"></i> Manage Events
                             </a>
                         </div>
                         <div class="col-md-3 mb-2">
@@ -146,36 +146,36 @@ ob_start();
     </div>
     
     <div class="row">
-        <!-- Recent Blog Posts -->
+        <!-- Recent Event Posts -->
         <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Recent Blog Posts</h5>
-                    <a href="<?php echo smartUrl('admin/blogs.php'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
+                    <h5 class="mb-0">Recent Event Posts</h5>
+                    <a href="<?php echo smartUrl('admin/events.php'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
                 <div class="card-body">
-                    <?php if (!empty($recent_blogs)): ?>
+                    <?php if (!empty($recent_events)): ?>
                         <div class="list-group list-group-flush">
-                            <?php foreach ($recent_blogs as $blog): ?>
+                            <?php foreach ($recent_events as $event): ?>
                                 <div class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
-                                        <div class="fw-bold"><?php echo htmlspecialchars($blog['title']); ?></div>
+                                        <div class="fw-bold"><?php echo htmlspecialchars($event['title']); ?></div>
                                         <small class="text-muted">
-                                            By <?php echo htmlspecialchars($blog['author_username']); ?> • 
-                                            <?php echo formatDate($blog['created_at'], 'M d, Y'); ?>
+                                            By <?php echo htmlspecialchars($event['author_username']); ?> • 
+                                            <?php echo formatDate($event['created_at'], 'M d, Y'); ?>
                                         </small>
                                     </div>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="<?php echo smartUrl('blog/detail.php?id=' . $blog['id']); ?>" 
+                                        <a href="<?php echo smartUrl('event/detail.php?id=' . $event['id']); ?>" 
                                            class="btn btn-outline-primary btn-sm">View</a>
-                                        <a href="<?php echo smartUrl('blog/edit.php?id=' . $blog['id']); ?>" 
+                                        <a href="<?php echo smartUrl('event/edit.php?id=' . $event['id']); ?>" 
                                            class="btn btn-outline-warning btn-sm">Edit</a>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
                     <?php else: ?>
-                        <p class="text-muted">No blog posts yet.</p>
+                        <p class="text-muted">No events yet.</p>
                     <?php endif; ?>
                 </div>
             </div>

@@ -1,15 +1,15 @@
 <?php
 require_once '../includes/functions.php';
 
-$page_title = 'Blog - Brain Swarm';
+$page_title = 'Events - Brain Swarm';
 
-// Get all blog posts
+// Get all event posts
 $db = Database::getInstance();
-$blogs = $db->fetchAll(
-    "SELECT b.*, u.username as author_username 
-     FROM blogs b 
-     LEFT JOIN users u ON b.author_id = u.id 
-     ORDER BY b.publish_date DESC"
+$events = $db->fetchAll(
+    "SELECT e.*, u.username as author_username 
+     FROM event e 
+     LEFT JOIN users u ON e.author_id = u.id 
+     ORDER BY e.publish_date DESC"
 );
 
 // Function to truncate words
@@ -29,10 +29,10 @@ ob_start();
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="display-4">Blog Posts</h1>
+                <h1 class="display-4">Events</h1>
                 <?php if (SessionManager::isAdmin()): ?>
-                    <a href="<?php echo smartUrl('blog/create.php'); ?>" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i> Add New Blog
+                    <a href="<?php echo smartUrl('event/create.php'); ?>" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> Add New Event
                     </a>
                 <?php endif; ?>
             </div>
@@ -40,35 +40,35 @@ ob_start();
     </div>
     
     <div class="row">
-        <?php if (!empty($blogs)): ?>
-            <?php foreach ($blogs as $blog): ?>
+        <?php if (!empty($events)): ?>
+            <?php foreach ($events as $event): ?>
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow-sm">
-                        <?php if (!empty($blog['image'])): ?>
-                            <img src="<?php echo smartUrl('uploads/blog_images/' . $blog['image']); ?>" 
-                                 alt="<?php echo htmlspecialchars($blog['title']); ?>" 
+                        <?php if (!empty($event['image'])): ?>
+                            <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($event['title']); ?>" 
                                  class="card-img-top expandable-image" 
-                                 data-full-src="<?php echo smartUrl('uploads/blog_images/' . $blog['image']); ?>">
+                                 data-full-src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>">
                         <?php endif; ?>
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title"><?php echo htmlspecialchars($blog['title']); ?></h5>
+                            <h5 class="card-title"><?php echo htmlspecialchars($event['title']); ?></h5>
                             <p class="card-text flex-grow-1">
-                                <?php echo htmlspecialchars(truncateWords($blog['content'])); ?>
+                                <?php echo htmlspecialchars(truncateWords($event['content'])); ?>
                             </p>
                             <div class="mt-auto">
                                 <small class="text-muted">
-                                    By <?php echo htmlspecialchars($blog['author_username']); ?> • 
-                                    <?php echo formatDate($blog['publish_date'], 'M d, Y'); ?>
+                                    By <?php echo htmlspecialchars($event['author_username']); ?> • 
+                                    <?php echo formatDate($event['publish_date'], 'M d, Y'); ?>
                                 </small>
                                 <div class="mt-2">
-                                    <a href="<?php echo smartUrl('blog/detail.php?id=' . $blog['id']); ?>" 
-                                       class="btn btn-outline-primary btn-sm">Read More</a>
+                                    <a href="<?php echo smartUrl('event/detail.php?id=' . $event['id']); ?>" 
+                                       class="btn btn-outline-primary btn-sm">View</a>
                                     
                                     <?php if (SessionManager::isAdmin()): ?>
                                         <div class="btn-group btn-group-sm mt-2" role="group">
-                                            <a href="<?php echo smartUrl('blog/edit.php?id=' . $blog['id']); ?>" 
+                                            <a href="<?php echo smartUrl('event/edit.php?id=' . $event['id']); ?>" 
                                                class="btn btn-outline-warning">Edit</a>
-                                            <a href="<?php echo smartUrl('blog/delete.php?id=' . $blog['id']); ?>" 
+                                            <a href="<?php echo smartUrl('event/delete.php?id=' . $event['id']); ?>" 
                                                class="btn btn-outline-danger">Delete</a>
                                         </div>
                                     <?php endif; ?>
@@ -81,10 +81,10 @@ ob_start();
         <?php else: ?>
             <div class="col-12">
                 <div class="text-center py-5">
-                    <h3 class="text-muted">No blog posts yet</h3>
+                    <h3 class="text-muted">No events yet</h3>
                     <p class="text-muted">Check back later for new content!</p>
                     <?php if (SessionManager::isAdmin()): ?>
-                        <a href="<?php echo smartUrl('blog/create.php'); ?>" class="btn btn-primary mt-3">Create First Blog Post</a>
+                        <a href="<?php echo smartUrl('event/create.php'); ?>" class="btn btn-primary mt-3">Create First Event</a>
                     <?php endif; ?>
                 </div>
             </div>

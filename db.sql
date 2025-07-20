@@ -35,8 +35,8 @@ CREATE TABLE profiles (
     INDEX idx_is_admin (is_admin)
 );
 
--- Blog posts table
-CREATE TABLE blogs (
+-- Event posts table
+CREATE TABLE event (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
     content TEXT NOT NULL,
@@ -51,17 +51,17 @@ CREATE TABLE blogs (
     INDEX idx_title (title)
 );
 
--- Blog contributors table
+-- Event contributors table
 CREATE TABLE contributors (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    blog_id INT NOT NULL,
+    event_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(254) DEFAULT '',
     github VARCHAR(255) DEFAULT '',
     linkedin VARCHAR(255) DEFAULT '',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (blog_id) REFERENCES blogs(id) ON DELETE CASCADE,
-    INDEX idx_blog (blog_id),
+    FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE CASCADE,
+    INDEX idx_event (event_id),
     INDEX idx_name (name)
 );
 
@@ -103,12 +103,12 @@ VALUES ('admin', 'admin@brainswarm.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro
 INSERT INTO profiles (user_id, full_name, is_admin) 
 VALUES (1, 'Admin User', TRUE);
 
--- Sample blog post
-INSERT INTO blogs (title, content, author_id, publish_date) VALUES 
+-- Sample event post
+INSERT INTO event (title, content, author_id, publish_date) VALUES 
 ('Welcome to Brain Swarm', 'Welcome to our innovative real estate platform. We are dedicated to transforming educational experiences and accelerating innovative research in the real estate sector.', 1, NOW());
 
--- Sample contributor for the blog post
-INSERT INTO contributors (blog_id, name, email, github) VALUES 
+-- Sample contributor for the event post
+INSERT INTO contributors (event_id, name, email, github) VALUES 
 (1, 'Brain Swarm Team', 'team@brainswarm.com', 'https://github.com/shanooo773');
 
 -- Sample form submissions

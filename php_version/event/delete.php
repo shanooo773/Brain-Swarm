@@ -4,48 +4,48 @@ require_once '../includes/functions.php';
 // Require admin access
 requireAdmin();
 
-// Get blog ID from URL
-$blog_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Get event ID from URL
+$event_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-if (!$blog_id) {
-    setFlashMessage('error', 'Blog post not found.');
-    redirect(smartUrl('blog/list.php'));
+if (!$event_id) {
+    setFlashMessage('error', 'Event not found.');
+    redirect(smartUrl('event/list.php'));
 }
 
-// Get blog post
+// Get event
 $db = Database::getInstance();
-$blog = $db->fetch("SELECT * FROM blogs WHERE id = ?", [$blog_id]);
+$event = $db->fetch("SELECT * FROM event WHERE id = ?", [$event_id]);
 
-if (!$blog) {
-    setFlashMessage('error', 'Blog post not found.');
-    redirect(smartUrl('blog/list.php'));
+if (!$event) {
+    setFlashMessage('error', 'Event not found.');
+    redirect(smartUrl('event/list.php'));
 }
 
-$page_title = 'Delete: ' . htmlspecialchars($blog['title']);
+$page_title = 'Delete: ' . htmlspecialchars($event['title']);
 
 // Handle deletion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['confirm_delete'])) {
         try {
             // Delete associated contributors first
-            $db->query("DELETE FROM contributors WHERE blog_id = ?", [$blog_id]);
+            $db->query("DELETE FROM contributors WHERE event_id = ?", [$event_id]);
             
-            // Delete the blog post
-            $db->query("DELETE FROM blogs WHERE id = ?", [$blog_id]);
+            // Delete the event
+            $db->query("DELETE FROM event WHERE id = ?", [$event_id]);
             
             // Delete associated image file if it exists
-            if (!empty($blog['image']) && file_exists(BLOG_IMAGES_DIR . $blog['image'])) {
-                unlink(BLOG_IMAGES_DIR . $blog['image']);
+            if (!empty($event['image']) && file_exists(EVENT_IMAGES_DIR . $event['image'])) {
+                unlink(EVENT_IMAGES_DIR . $event['image']);
             }
             
-            setFlashMessage('success', 'Blog post deleted successfully!');
-            redirect(smartUrl('blog/list.php'));
+            setFlashMessage('success', 'Event deleted successfully!');
+            redirect(smartUrl('event/list.php'));
         } catch (Exception $e) {
-            setFlashMessage('error', 'There was an error deleting the blog post. Please try again.');
+            setFlashMessage('error', 'There was an error deleting the event. Please try again.');
         }
     } else {
         // User cancelled, redirect back
-        redirect(smartUrl('blog/detail.php?id=' . $blog_id));
+        redirect(smartUrl('event/detail.php?id=' . $event_id));
     }
 }
 
@@ -63,24 +63,24 @@ ob_start();
                     </h4>
                 </div>
                 <div class="card-body">
-                    <p class="mb-3">Are you sure you want to delete this blog post? This action cannot be undone.</p>
+                    <p class="mb-3">Are you sure you want to delete this event? This action cannot be undone.</p>
                     
-                    <div class="blog-preview p-3 bg-light rounded mb-4">
-                        <h5 class="mb-2"><?php echo htmlspecialchars($blog['title']); ?></h5>
+                    <div class="event-preview p-3 bg-light rounded mb-4">
+                        <h5 class="mb-2"><?php echo htmlspecialchars($event['title']); ?></h5>
                         
-                        <?php if (!empty($blog['image'])): ?>
-                            <img src="<?php echo smartUrl('uploads/blog_images/' . $blog['image']); ?>" 
-                                 alt="<?php echo htmlspecialchars($blog['title']); ?>" 
+                        <?php if (!empty($event['image'])): ?>
+                            <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($event['title']); ?>" 
                                  class="img-fluid rounded mb-2" 
                                  style="max-height: 150px;">
                         <?php endif; ?>
                         
                         <p class="text-muted mb-1">
-                            Published: <?php echo formatDate($blog['publish_date'], 'F d, Y'); ?>
+                            Published: <?php echo formatDate($event['publish_date'], 'F d, Y'); ?>
                         </p>
                         
                         <p class="mb-0">
-                            <?php echo htmlspecialchars(substr($blog['content'], 0, 150)) . (strlen($blog['content']) > 150 ? '...' : ''); ?>
+                            <?php echo htmlspecialchars(substr($event['content'], 0, 150)) . (strlen($event['content']) > 150 ? '...' : ''); ?>
                         </p>
                     </div>
                     
@@ -89,9 +89,9 @@ ob_start();
                             <i class="bi bi-info-circle"></i> What will be deleted:
                         </h6>
                         <ul class="mb-0">
-                            <li>The blog post and all its content</li>
+                            <li>The event and all its content</li>
                             <li>Any associated contributors</li>
-                            <?php if (!empty($blog['image'])): ?>
+                            <?php if (!empty($event['image'])): ?>
                                 <li>The uploaded featured image</li>
                             <?php endif; ?>
                         </ul>
@@ -100,10 +100,10 @@ ob_start();
                     <form method="post">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <a href="<?php echo smartUrl('blog/detail.php?id=' . $blog_id); ?>" class="btn btn-secondary">
+                                <a href="<?php echo smartUrl('event/detail.php?id=' . $event_id); ?>" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left"></i> Cancel
                                 </a>
-                                <a href="<?php echo smartUrl('blog/list.php'); ?>" class="btn btn-outline-secondary ms-2">
+                                <a href="<?php echo smartUrl('event/list.php'); ?>" class="btn btn-outline-secondary ms-2">
                                     <i class="bi bi-list"></i> All Posts
                                 </a>
                             </div>
@@ -131,11 +131,11 @@ $extra_css = '
     border-radius: 12px 12px 0 0 !important;
 }
 
-.blog-preview {
+.event-preview {
     border: 1px solid #dee2e6;
 }
 
-.blog-preview img {
+.event-preview img {
     object-fit: cover;
     width: 100%;
 }

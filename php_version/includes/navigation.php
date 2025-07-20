@@ -22,7 +22,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                 <ul class="nav" style="list-style: none; display: flex; gap: 20px; margin-left:0; padding: 0;">
                     <?php if ($current_user): ?>
                         <?php if ($is_admin): ?>
-                            <li><a href="<?php echo smartUrl('blog/create.php'); ?>"><i class="fa fa-plus"></i> New Blog</a></li>
+                            <li><a href="<?php echo smartUrl('event/create.php'); ?>"><i class="fa fa-plus"></i> New Event</a></li>
                         <?php endif; ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -56,7 +56,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
                         <li><a href="<?php echo smartUrl(); ?>" <?php echo ($current_page == 'index') ? 'class="active"' : ''; ?>>Home</a></li>
-                        <li><a href="<?php echo smartUrl('blog/list.php'); ?>" <?php echo (strpos($current_page, 'blog') !== false) ? 'class="active"' : ''; ?>>Blog</a></li>
+                        <li><a href="<?php echo smartUrl('event/list.php'); ?>" <?php echo (strpos($current_page, 'event') !== false) ? 'class="active"' : ''; ?>>Events</a></li>
                         <li><a href="<?php echo smartUrl('properties.php'); ?>" <?php echo ($current_page == 'properties') ? 'class="active"' : ''; ?>>Our Team</a></li>
                         <li><a href="<?php echo smartUrl('property-details.php'); ?>" <?php echo ($current_page == 'property-details') ? 'class="active"' : ''; ?>>Support</a></li>
                         <li><a href="<?php echo smartUrl('contact.php'); ?>" <?php echo ($current_page == 'contact') ? 'class="active"' : ''; ?>>Contact Us</a></li>

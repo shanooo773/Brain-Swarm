@@ -17,6 +17,7 @@ define('SITE_EMAIL', 'admin@brainswarm.com');     // Site admin email
 // Upload directories (relative to site root)
 define('UPLOAD_DIR', 'uploads/');
 define('BLOG_IMAGES_DIR', UPLOAD_DIR . 'blog_images/');
+define('EVENT_IMAGES_DIR', UPLOAD_DIR . 'event_images/');
 define('PROFILE_PICS_DIR', UPLOAD_DIR . 'profile_pics/');
 
 // Security settings
@@ -88,6 +89,7 @@ INSTALLATION INSTRUCTIONS:
 
 6. CREATE UPLOAD DIRECTORIES:
    - Create: uploads/blog_images/ (permissions 755)
+   - Create: uploads/event_images/ (permissions 755)
    - Create: uploads/profile_pics/ (permissions 755)
 
 7. IMPORT DATABASE:

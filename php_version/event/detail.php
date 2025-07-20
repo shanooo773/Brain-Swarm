@@ -1,35 +1,35 @@
 <?php
 require_once '../includes/functions.php';
 
-// Get blog ID from URL
-$blog_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Get event ID from URL
+$event_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-if (!$blog_id) {
-    setFlashMessage('error', 'Blog post not found.');
-    redirect(smartUrl('blog/list.php'));
+if (!$event_id) {
+    setFlashMessage('error', 'Event not found.');
+    redirect(smartUrl('event/list.php'));
 }
 
-// Get blog post with author info
+// Get event post with author info
 $db = Database::getInstance();
-$blog = $db->fetch(
-    "SELECT b.*, u.username as author_username 
-     FROM blogs b 
-     LEFT JOIN users u ON b.author_id = u.id 
-     WHERE b.id = ?",
-    [$blog_id]
+$event = $db->fetch(
+    "SELECT e.*, u.username as author_username 
+     FROM event e 
+     LEFT JOIN users u ON e.author_id = u.id 
+     WHERE e.id = ?",
+    [$event_id]
 );
 
-if (!$blog) {
-    setFlashMessage('error', 'Blog post not found.');
-    redirect(smartUrl('blog/list.php'));
+if (!$event) {
+    setFlashMessage('error', 'Event not found.');
+    redirect(smartUrl('event/list.php'));
 }
 
-$page_title = htmlspecialchars($blog['title']) . ' - Brain Swarm';
+$page_title = htmlspecialchars($event['title']) . ' - Brain Swarm';
 
-// Get contributors for this blog
+// Get contributors for this event
 $contributors = $db->fetchAll(
-    "SELECT * FROM contributors WHERE blog_id = ? ORDER BY name",
-    [$blog_id]
+    "SELECT * FROM contributors WHERE event_id = ? ORDER BY name",
+    [$event_id]
 );
 
 // Start output buffering for content
@@ -40,36 +40,36 @@ ob_start();
     <div class="row">
         <!-- Main Content Column -->
         <div class="col-lg-<?php echo !empty($contributors) ? '8' : '12'; ?>">
-            <article class="blog-post">
+            <article class="event-post">
                 <!-- Featured Image -->
-                <?php if (!empty($blog['image'])): ?>
+                <?php if (!empty($event['image'])): ?>
                     <div class="featured-image mb-4">
-                        <img src="<?php echo smartUrl('uploads/blog_images/' . $blog['image']); ?>" 
-                             alt="<?php echo htmlspecialchars($blog['title']); ?>" 
+                        <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
+                             alt="<?php echo htmlspecialchars($event['title']); ?>" 
                              class="img-fluid rounded expandable-image" 
-                             data-full-src="<?php echo smartUrl('uploads/blog_images/' . $blog['image']); ?>">
+                             data-full-src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>">
                     </div>
                 <?php endif; ?>
                 
-                <!-- Blog Header -->
+                <!-- Event Header -->
                 <header class="mb-4">
-                    <h1 class="display-4 mb-3"><?php echo htmlspecialchars($blog['title']); ?></h1>
+                    <h1 class="display-4 mb-3"><?php echo htmlspecialchars($event['title']); ?></h1>
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="blog-meta">
+                        <div class="event-meta">
                             <span class="text-muted">
-                                <i class="bi bi-person"></i> <?php echo htmlspecialchars($blog['author_username']); ?>
+                                <i class="bi bi-person"></i> <?php echo htmlspecialchars($event['author_username']); ?>
                             </span>
                             <span class="text-muted ms-3">
-                                <i class="bi bi-calendar"></i> <?php echo formatDate($blog['publish_date'], 'F d, Y'); ?>
+                                <i class="bi bi-calendar"></i> <?php echo formatDate($event['publish_date'], 'F d, Y'); ?>
                             </span>
                         </div>
                         
                         <?php if (SessionManager::isAdmin()): ?>
                             <div class="btn-group" role="group">
-                                <a href="<?php echo smartUrl('blog/edit.php?id=' . $blog['id']); ?>" class="btn btn-outline-warning btn-sm">
+                                <a href="<?php echo smartUrl('event/edit.php?id=' . $event['id']); ?>" class="btn btn-outline-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
-                                <a href="<?php echo smartUrl('blog/delete.php?id=' . $blog['id']); ?>" class="btn btn-outline-danger btn-sm">
+                                <a href="<?php echo smartUrl('event/delete.php?id=' . $event['id']); ?>" class="btn btn-outline-danger btn-sm">
                                     <i class="bi bi-trash"></i> Delete
                                 </a>
                             </div>
@@ -77,23 +77,23 @@ ob_start();
                     </div>
                 </header>
                 
-                <!-- Blog Content -->
-                <div class="blog-content">
-                    <?php echo nl2br(htmlspecialchars($blog['content'])); ?>
+                <!-- Event Content -->
+                <div class="event-content">
+                    <?php echo nl2br(htmlspecialchars($event['content'])); ?>
                 </div>
                 
                 <!-- Navigation -->
-                <div class="blog-navigation mt-5 pt-4 border-top">
+                <div class="event-navigation mt-5 pt-4 border-top">
                     <div class="row">
                         <div class="col-md-6">
-                            <a href="<?php echo smartUrl('blog/list.php'); ?>" class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-left"></i> Back to Blog
+                            <a href="<?php echo smartUrl('event/list.php'); ?>" class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-left"></i> Back to Events
                             </a>
                         </div>
                         <div class="col-md-6 text-end">
                             <?php if (SessionManager::isAdmin()): ?>
-                                <a href="<?php echo smartUrl('blog/create.php'); ?>" class="btn btn-primary">
-                                    <i class="bi bi-plus-lg"></i> New Post
+                                <a href="<?php echo smartUrl('event/create.php'); ?>" class="btn btn-primary">
+                                    <i class="bi bi-plus-lg"></i> New Event
                                 </a>
                             <?php endif; ?>
                         </div>
@@ -151,16 +151,16 @@ ob_start();
 // Add custom styles
 $extra_css = '
 <style>
-.blog-post {
+.event-post {
     font-size: 1.1rem;
     line-height: 1.8;
 }
 
-.blog-content {
+.event-content {
     margin-bottom: 2rem;
 }
 
-.blog-meta {
+.event-meta {
     font-size: 0.95rem;
 }
 

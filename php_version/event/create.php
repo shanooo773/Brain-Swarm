@@ -4,7 +4,7 @@ require_once '../includes/functions.php';
 // Require admin access
 requireAdmin();
 
-$page_title = 'Create Blog Post - Brain Swarm';
+$page_title = 'Create Event - Brain Swarm';
 
 $errors = [];
 $form_data = [];
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle image upload
     $image_filename = '';
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $upload_result = uploadFile($_FILES['image'], BLOG_IMAGES_DIR, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+        $upload_result = uploadFile($_FILES['image'], EVENT_IMAGES_DIR, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
         if ($upload_result['success']) {
             $image_filename = $upload_result['filename'];
         } else {
@@ -38,20 +38,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $current_user = SessionManager::getUser();
             
             $db->query(
-                "INSERT INTO blogs (title, content, author_id, image, publish_date) VALUES (?, ?, ?, ?, NOW())",
+                "INSERT INTO event (title, content, author_id, image, publish_date) VALUES (?, ?, ?, ?, NOW())",
                 [$title, $content, $current_user['id'], $image_filename]
             );
             
-            $blog_id = $db->lastInsertId();
+            $event_id = $db->lastInsertId();
             
-            setFlashMessage('success', 'Blog post created successfully!');
-            redirect(smartUrl('blog/detail.php?id=' . $blog_id));
+            setFlashMessage('success', 'Event created successfully!');
+            redirect(smartUrl('event/detail.php?id=' . $event_id));
         } catch (Exception $e) {
-            $errors[] = 'There was an error creating the blog post. Please try again.';
+            $errors[] = 'There was an error creating the event. Please try again.';
             
             // Clean up uploaded image if database insert failed
-            if ($image_filename && file_exists(BLOG_IMAGES_DIR . $image_filename)) {
-                unlink(BLOG_IMAGES_DIR . $image_filename);
+            if ($image_filename && file_exists(EVENT_IMAGES_DIR . $image_filename)) {
+                unlink(EVENT_IMAGES_DIR . $image_filename);
             }
         }
     }
@@ -66,7 +66,7 @@ ob_start();
         <div class="col-lg-8 mx-auto">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mb-0">Create New Blog Post</h2>
+                    <h2 class="mb-0">Create New Event</h2>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($errors)): ?>
@@ -81,9 +81,9 @@ ob_start();
                     
                     <form method="post" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <label for="title" class="form-label">Blog Title</label>
+                            <label for="title" class="form-label">Event Title</label>
                             <input type="text" class="form-control" id="title" name="title" 
-                                   placeholder="Enter blog title" 
+                                   placeholder="Enter event title" 
                                    value="<?php echo htmlspecialchars($form_data['title'] ?? ''); ?>" required>
                         </div>
                         
@@ -95,17 +95,17 @@ ob_start();
                         </div>
                         
                         <div class="mb-3">
-                            <label for="content" class="form-label">Blog Content</label>
+                            <label for="content" class="form-label">Event Content</label>
                             <textarea class="form-control" id="content" name="content" rows="15" 
-                                      placeholder="Write your blog content here..." required><?php echo htmlspecialchars($form_data['content'] ?? ''); ?></textarea>
+                                      placeholder="Write your event content here..." required><?php echo htmlspecialchars($form_data['content'] ?? ''); ?></textarea>
                         </div>
                         
                         <div class="d-flex justify-content-between">
-                            <a href="<?php echo smartUrl('blog/list.php'); ?>" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Back to Blog
+                            <a href="<?php echo smartUrl('event/list.php'); ?>" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Events
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save"></i> Create Blog Post
+                                <i class="bi bi-save"></i> Create Event
                             </button>
                         </div>
                     </form>
