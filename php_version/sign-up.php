@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
                 
                 setFlashMessage('success', 'Account created successfully! You can now log in.');
-                redirect(smartUrl('sign-in.php'));
+                redirect('sign-in.php');
             }
         } catch (Exception $e) {
             $errors[] = 'An error occurred while creating your account. Please try again.';

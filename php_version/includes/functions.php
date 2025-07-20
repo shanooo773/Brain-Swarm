@@ -8,12 +8,23 @@ class Database {
     
     private function __construct() {
         try {
-            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
-            $this->connection = new PDO($dsn, DB_USER, DB_PASS, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
-            ]);
+            if (defined('USE_SQLITE') && USE_SQLITE) {
+                // SQLite connection
+                $dsn = "sqlite:" . DB_PATH;
+                $this->connection = new PDO($dsn, null, null, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]);
+            } else {
+                // MySQL connection
+                $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+                $this->connection = new PDO($dsn, DB_USER, DB_PASS, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]);
+            }
         } catch (PDOException $e) {
             die("Database connection failed: " . $e->getMessage());
         }
@@ -245,7 +256,12 @@ function assetWithFallback($path, $cdnUrl = null) {
 function requireAuth() {
     if (!SessionManager::isLoggedIn()) {
         setFlashMessage('error', 'Please log in to access this page.');
-        redirect(url('sign-in.php'));
+        // Determine relative path to sign-in.php
+        $script_dir = dirname($_SERVER['SCRIPT_NAME']);
+        $base_dir = str_replace('/admin', '', $script_dir);
+        $base_dir = str_replace('/blog', '', $base_dir);
+        $signin_path = $base_dir . '/sign-in.php';
+        redirect($signin_path);
     }
 }
 
@@ -253,7 +269,12 @@ function requireAdmin() {
     requireAuth();
     if (!SessionManager::isAdmin()) {
         setFlashMessage('error', 'You do not have permission to access this page.');
-        redirect(url());
+        // Determine relative path to index.php
+        $script_dir = dirname($_SERVER['SCRIPT_NAME']);
+        $base_dir = str_replace('/admin', '', $script_dir);
+        $base_dir = str_replace('/blog', '', $base_dir);
+        $index_path = $base_dir . '/index.php';
+        redirect($index_path);
     }
 }
 

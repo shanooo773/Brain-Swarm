@@ -28,13 +28,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if ($user && verifyPassword($password, $user['password'])) {
                 // Update last login
-                $db->query("UPDATE users SET last_login = NOW() WHERE id = ?", [$user['id']]);
+                if (defined('USE_SQLITE') && USE_SQLITE) {
+                    $db->query("UPDATE users SET last_login = datetime('now') WHERE id = ?", [$user['id']]);
+                } else {
+                    $db->query("UPDATE users SET last_login = NOW() WHERE id = ?", [$user['id']]);
+                }
                 
                 // Set session
                 SessionManager::set('user_id', $user['id']);
                 
                 setFlashMessage('success', 'Welcome back, ' . htmlspecialchars($user['username']) . '!');
-                redirect(url());
+                redirect('index.php');
             } else {
                 $errors[] = 'Invalid username or password.';
             }
