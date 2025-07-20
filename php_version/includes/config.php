@@ -2,11 +2,11 @@
 // Database configuration for Brain Swarm Real Estate Website
 // Compatible with Hostinger Premium Web Hosting
 
-// MySQL Database configuration
+// Database configuration
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'brain_swarm');
-define('DB_USER', 'root');             // Default for local development
-define('DB_PASS', '');                 // Default for local development (empty password)
+define('DB_USER', 'your_username');    // Replace with your database username
+define('DB_PASS', 'your_password');    // Replace with your database password
 define('DB_CHARSET', 'utf8mb4');
 
 // Site configuration
@@ -17,7 +17,6 @@ define('SITE_EMAIL', 'admin@brainswarm.com');
 // Upload directories
 define('UPLOAD_DIR', 'uploads/');
 define('BLOG_IMAGES_DIR', UPLOAD_DIR . 'blog_images/');
-define('EVENT_IMAGES_DIR', UPLOAD_DIR . 'event_images/');
 define('PROFILE_PICS_DIR', UPLOAD_DIR . 'profile_pics/');
 
 // Security settings
