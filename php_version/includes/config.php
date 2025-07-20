@@ -3,11 +3,22 @@
 // Compatible with Hostinger Premium Web Hosting
 
 // Database configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'brain_swarm');
-define('DB_USER', 'your_username');    // Replace with your database username
-define('DB_PASS', 'your_password');    // Replace with your database password
-define('DB_CHARSET', 'utf8mb4');
+// Set USE_SQLITE to true for development/testing, false for production MySQL
+define('USE_SQLITE', true);
+
+if (defined('USE_SQLITE') && USE_SQLITE) {
+    // SQLite configuration for testing
+    define('DB_TYPE', 'sqlite');
+    define('DB_PATH', '/tmp/brain_swarm.db');
+} else {
+    // MySQL configuration for production
+    define('DB_TYPE', 'mysql');
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'brain_swarm');
+    define('DB_USER', 'root');             // Default for local development
+    define('DB_PASS', '');                 // Default for local development (empty password)
+    define('DB_CHARSET', 'utf8mb4');
+}
 
 // Site configuration
 define('SITE_URL', 'http://localhost');  // Replace with your domain
