@@ -120,22 +120,22 @@ ob_start();
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3 mb-2">
-                            <a href="../blog/create.php" class="btn btn-primary w-100">
+                            <a href="<?php echo smartUrl('blog/create.php'); ?>" class="btn btn-primary w-100">
                                 <i class="bi bi-plus-lg"></i> Create Blog Post
                             </a>
                         </div>
                         <div class="col-md-3 mb-2">
-                            <a href="blogs.php" class="btn btn-outline-primary w-100">
+                            <a href="<?php echo smartUrl('admin/blogs.php'); ?>" class="btn btn-outline-primary w-100">
                                 <i class="bi bi-journal-text"></i> Manage Blogs
                             </a>
                         </div>
                         <div class="col-md-3 mb-2">
-                            <a href="forms.php" class="btn btn-outline-success w-100">
+                            <a href="<?php echo smartUrl('admin/forms.php'); ?>" class="btn btn-outline-success w-100">
                                 <i class="bi bi-envelope"></i> View Submissions
                             </a>
                         </div>
                         <div class="col-md-3 mb-2">
-                            <a href="users.php" class="btn btn-outline-info w-100">
+                            <a href="<?php echo smartUrl('admin/users.php'); ?>" class="btn btn-outline-info w-100">
                                 <i class="bi bi-people"></i> Manage Users
                             </a>
                         </div>
@@ -151,7 +151,7 @@ ob_start();
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Recent Blog Posts</h5>
-                    <a href="blogs.php" class="btn btn-sm btn-outline-primary">View All</a>
+                    <a href="<?php echo smartUrl('admin/blogs.php'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($recent_blogs)): ?>
@@ -166,9 +166,9 @@ ob_start();
                                         </small>
                                     </div>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="../blog/detail.php?id=<?php echo $blog['id']; ?>" 
+                                        <a href="<?php echo smartUrl('blog/detail.php?id=' . $blog['id']); ?>" 
                                            class="btn btn-outline-primary btn-sm">View</a>
-                                        <a href="../blog/edit.php?id=<?php echo $blog['id']; ?>" 
+                                        <a href="<?php echo smartUrl('blog/edit.php?id=' . $blog['id']); ?>" 
                                            class="btn btn-outline-warning btn-sm">Edit</a>
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@ ob_start();
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Recent Form Submissions</h5>
-                    <a href="forms.php" class="btn btn-sm btn-outline-success">View All</a>
+                    <a href="<?php echo smartUrl('admin/forms.php'); ?>" class="btn btn-sm btn-outline-success">View All</a>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($recent_forms)): ?>

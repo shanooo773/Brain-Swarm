@@ -9,7 +9,7 @@ $blog_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if (!$blog_id) {
     setFlashMessage('error', 'Blog post not found.');
-    redirect(url('blog/list.php'));
+    redirect(smartUrl('blog/list.php'));
 }
 
 // Get blog post
@@ -18,7 +18,7 @@ $blog = $db->fetch("SELECT * FROM blogs WHERE id = ?", [$blog_id]);
 
 if (!$blog) {
     setFlashMessage('error', 'Blog post not found.');
-    redirect(url('blog/list.php'));
+    redirect(smartUrl('blog/list.php'));
 }
 
 $page_title = 'Delete: ' . htmlspecialchars($blog['title']);
@@ -39,13 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             setFlashMessage('success', 'Blog post deleted successfully!');
-            redirect(url('blog/list.php'));
+            redirect(smartUrl('blog/list.php'));
         } catch (Exception $e) {
             setFlashMessage('error', 'There was an error deleting the blog post. Please try again.');
         }
     } else {
         // User cancelled, redirect back
-        redirect(url('blog/detail.php?id=' . $blog_id));
+        redirect(smartUrl('blog/detail.php?id=' . $blog_id));
     }
 }
 
@@ -69,7 +69,7 @@ ob_start();
                         <h5 class="mb-2"><?php echo htmlspecialchars($blog['title']); ?></h5>
                         
                         <?php if (!empty($blog['image'])): ?>
-                            <img src="<?php echo url('uploads/blog_images/' . $blog['image']); ?>" 
+                            <img src="<?php echo smartUrl('uploads/blog_images/' . $blog['image']); ?>" 
                                  alt="<?php echo htmlspecialchars($blog['title']); ?>" 
                                  class="img-fluid rounded mb-2" 
                                  style="max-height: 150px;">
@@ -100,10 +100,10 @@ ob_start();
                     <form method="post">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <a href="<?php echo url('blog/detail.php?id=' . $blog_id); ?>" class="btn btn-secondary">
+                                <a href="<?php echo smartUrl('blog/detail.php?id=' . $blog_id); ?>" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left"></i> Cancel
                                 </a>
-                                <a href="<?php echo url('blog/list.php'); ?>" class="btn btn-outline-secondary ms-2">
+                                <a href="<?php echo smartUrl('blog/list.php'); ?>" class="btn btn-outline-secondary ms-2">
                                     <i class="bi bi-list"></i> All Posts
                                 </a>
                             </div>

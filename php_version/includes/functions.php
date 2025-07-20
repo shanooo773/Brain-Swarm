@@ -210,8 +210,22 @@ function asset($path) {
 function getBaseUrl() {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $script_name = dirname($_SERVER['SCRIPT_NAME']);
-    $base_path = $script_name === '/' ? '' : $script_name;
+    
+    // Get the script name and find the project root
+    $script_name = $_SERVER['SCRIPT_NAME'];
+    
+    // Find the position of php_version in the script name to determine the base path
+    if (strpos($script_name, '/php_version/') !== false) {
+        // Extract everything up to and including 'php_version'
+        $base_path = substr($script_name, 0, strpos($script_name, '/php_version/') + 12);
+    } else {
+        // Fallback to the directory of the script name
+        $base_path = dirname($script_name);
+        if ($base_path === '/') {
+            $base_path = '';
+        }
+    }
+    
     return $protocol . $host . $base_path;
 }
 
