@@ -81,6 +81,11 @@ def sign_in(request):
             login(request, user)
             messages.success(request, f'Welcome back, {user.username}!')
             
+            # Check if there's a 'next' parameter in the URL
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
+            
             # Check if user is admin and redirect to dashboard
             if is_admin_user(user):
                 return redirect('admin_dashboard')
