@@ -23,7 +23,7 @@ if ($_POST) {
             setFlashMessage('error', 'An error occurred: ' . $e->getMessage());
         }
         
-        redirect('forms.php');
+        redirect(smartUrl('admin/forms.php'));
     }
 }
 
@@ -58,7 +58,7 @@ ob_start();
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="display-5">Form Submissions</h1>
-                <a href="index.php" class="btn btn-secondary">← Back to Dashboard</a>
+                <a href="<?php echo smartUrl('admin/index.php'); ?>" class="btn btn-secondary">← Back to Dashboard</a>
             </div>
         </div>
     </div>
@@ -69,11 +69,11 @@ ob_start();
             <div class="card">
                 <div class="card-body">
                     <div class="btn-group" role="group">
-                        <a href="?filter=all" class="btn <?php echo $filter === 'all' ? 'btn-primary' : 'btn-outline-primary'; ?>">
+                        <a href="<?php echo smartUrl('admin/forms.php?filter=all'); ?>" class="btn <?php echo $filter === 'all' ? 'btn-primary' : 'btn-outline-primary'; ?>">
                             All (<?php echo count($forms); ?>)
                         </a>
                         <?php foreach ($type_counts as $type): ?>
-                            <a href="?filter=<?php echo $type['form_type']; ?>" 
+                            <a href="<?php echo smartUrl('admin/forms.php?filter=' . $type['form_type']); ?>" 
                                class="btn <?php echo $filter === $type['form_type'] ? 'btn-primary' : 'btn-outline-primary'; ?>">
                                 <?php echo ucfirst($type['form_type']); ?> (<?php echo $type['count']; ?>)
                             </a>

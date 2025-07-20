@@ -27,7 +27,7 @@ if ($_POST) {
             setFlashMessage('error', 'An error occurred: ' . $e->getMessage());
         }
         
-        redirect('users.php');
+        redirect(smartUrl('admin/users.php'));
     }
 }
 
@@ -49,7 +49,7 @@ ob_start();
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="display-5">Manage Users</h1>
-                <a href="index.php" class="btn btn-secondary">← Back to Dashboard</a>
+                <a href="<?php echo smartUrl('admin/index.php'); ?>" class="btn btn-secondary">← Back to Dashboard</a>
             </div>
         </div>
     </div>

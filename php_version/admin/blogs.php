@@ -26,7 +26,7 @@ if ($_POST) {
             setFlashMessage('error', 'An error occurred: ' . $e->getMessage());
         }
         
-        redirect('blogs.php');
+        redirect(smartUrl('admin/blogs.php'));
     }
 }
 
@@ -49,8 +49,8 @@ ob_start();
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="display-5">Manage Blog Posts</h1>
                 <div>
-                    <a href="../blog/create.php" class="btn btn-primary">Create New Blog</a>
-                    <a href="index.php" class="btn btn-secondary">← Back to Dashboard</a>
+                    <a href="<?php echo smartUrl('blog/create.php'); ?>" class="btn btn-primary">Create New Blog</a>
+                    <a href="<?php echo smartUrl('admin/index.php'); ?>" class="btn btn-secondary">← Back to Dashboard</a>
                 </div>
             </div>
         </div>
@@ -92,9 +92,9 @@ ob_start();
                                             <td><?php echo formatDate($blog['created_at'], 'M d, Y H:i'); ?></td>
                                             <td>
                                                 <div class="btn-group btn-group-sm">
-                                                    <a href="../blog/detail.php?id=<?php echo $blog['id']; ?>" 
+                                                    <a href="<?php echo smartUrl('blog/detail.php?id=' . $blog['id']); ?>" 
                                                        class="btn btn-outline-info">View</a>
-                                                    <a href="../blog/edit.php?id=<?php echo $blog['id']; ?>" 
+                                                    <a href="<?php echo smartUrl('blog/edit.php?id=' . $blog['id']); ?>" 
                                                        class="btn btn-outline-warning">Edit</a>
                                                     
                                                     <form method="post" style="display: inline;">
@@ -116,7 +116,7 @@ ob_start();
                         <div class="text-center py-5">
                             <h4 class="text-muted">No blog posts yet</h4>
                             <p class="text-muted">Create your first blog post to get started.</p>
-                            <a href="../blog/create.php" class="btn btn-primary">Create First Blog Post</a>
+                            <a href="<?php echo smartUrl('blog/create.php'); ?>" class="btn btn-primary">Create First Blog Post</a>
                         </div>
                     <?php endif; ?>
                 </div>
