@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Brain Swarm PHP Blog System - Comprehensive Test Script
+# Brain Swarm PHP Event System - Comprehensive Test Script
 # This script verifies all components are working correctly
 
 echo "=========================================="
-echo "Brain Swarm PHP Blog System Test"
+echo "Brain Swarm PHP Event System Test"
 echo "=========================================="
 
 cd "$(dirname "$0")"
@@ -43,9 +43,9 @@ echo -e "\n2. Testing File Structure..."
 required_files=(
     "includes/config.php"
     "includes/functions.php"
-    "blog/list.php"
-    "blog/detail.php"
-    "blog/read.php"
+    "event/list.php"
+    "event/detail.php"
+    "event/read.php"
     "sign-in.php"
     "sign-up.php"
     "admin/index.php"
@@ -65,12 +65,12 @@ done
 echo -e "\n3. Testing Directories..."
 required_dirs=(
     "uploads"
-    "uploads/blog_images"
+    "uploads/event_images"
     "uploads/profile_pics"
     "static"
     "templates"
     "admin"
-    "blog"
+    "event"
 )
 
 for dir in "${required_dirs[@]}"; do
@@ -88,9 +88,9 @@ done
 echo -e "\n4. Testing .htaccess Configuration..."
 if [ -f ".htaccess" ]; then
     if grep -q "RewriteRule.*blog.*detail.php" .htaccess; then
-        test_result 0 "Blog URL rewrite rules present"
+        test_result 0 "Event URL rewrite rules present"
     else
-        test_result 1 "Blog URL rewrite rules missing"
+        test_result 1 "Event URL rewrite rules missing"
     fi
     
     if grep -q "RewriteEngine" .htaccess; then
@@ -175,7 +175,7 @@ url_test=$(php -r "
 \$_SERVER['HTTP_HOST'] = 'localhost';
 \$_SERVER['SCRIPT_NAME'] = '/test.php';
 require_once 'includes/functions.php';
-\$url = smartUrl('blog/detail.php?id=1');
+\$url = smartUrl('event/detail.php?id=1');
 echo strpos(\$url, 'localhost') !== false ? 'URL_OK' : 'URL_FAIL';
 " 2>/dev/null)
 
@@ -186,14 +186,14 @@ else
 fi
 
 echo -e "\n10. Testing Read.php Redirect..."
-if [ -f "blog/read.php" ]; then
-    if grep -q "detail.php" blog/read.php; then
+if [ -f "event/read.php" ]; then
+    if grep -q "detail.php" event/read.php; then
         test_result 0 "read.php redirects to detail.php"
     else
         test_result 1 "read.php does not redirect properly"
     fi
 else
-    test_result 1 "blog/read.php file missing"
+    test_result 1 "event/read.php file missing"
 fi
 
 echo -e "\n=========================================="
@@ -205,7 +205,7 @@ echo -e "Total Tests: $((PASSED + FAILED))"
 
 if [ $FAILED -eq 0 ]; then
     echo -e "\n${GREEN}🎉 ALL TESTS PASSED!${NC}"
-    echo "The Brain Swarm PHP Blog System is ready for deployment."
+    echo "The Brain Swarm PHP Event System is ready for deployment."
     echo ""
     echo "Next steps:"
     echo "1. Set up MySQL database using db.sql"

@@ -39,6 +39,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Get latest 3 events for homepage display
+try {
+    $db = Database::getInstance();
+    $latest_events = $db->fetchAll(
+        "SELECT e.*, u.username as author_username 
+         FROM event e 
+         LEFT JOIN users u ON e.author_id = u.id 
+         ORDER BY e.created_at DESC 
+         LIMIT 3"
+    );
+} catch (Exception $e) {
+    $latest_events = [];
+}
+
 // Start output buffering for content
 ob_start();
 ?>
@@ -460,6 +474,76 @@ ob_start();
     </section>
 </div>
 
+<div class="events section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 offset-lg-4">
+                <div class="section-heading text-center">
+                    <h6>| Latest Events</h6>
+                    <h2>Recent Events & Updates</h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <?php if (!empty($latest_events)): ?>
+                <?php foreach ($latest_events as $event): ?>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm event-card">
+                            <?php if (!empty($event['image'])): ?>
+                                <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
+                                     alt="<?php echo htmlspecialchars($event['title']); ?>" 
+                                     class="card-img-top">
+                            <?php else: ?>
+                                <div class="card-img-top placeholder-img d-flex align-items-center justify-content-center">
+                                    <i class="fa fa-calendar" style="font-size: 3rem; color: #ff6b6b;"></i>
+                                </div>
+                            <?php endif; ?>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><?php echo htmlspecialchars($event['title']); ?></h5>
+                                <p class="card-text flex-grow-1">
+                                    <?php 
+                                    // Truncate content to show excerpt
+                                    $excerpt = strlen($event['content']) > 100 
+                                        ? substr($event['content'], 0, 100) . '...' 
+                                        : $event['content'];
+                                    echo htmlspecialchars($excerpt);
+                                    ?>
+                                </p>
+                                <div class="mt-auto">
+                                    <small class="text-muted mb-2 d-block">
+                                        <i class="fa fa-user"></i> <?php echo htmlspecialchars($event['author_username']); ?> • 
+                                        <i class="fa fa-calendar"></i> <?php echo formatDate($event['publish_date'], 'M d, Y'); ?>
+                                    </small>
+                                    <a href="<?php echo smartUrl('event/detail.php?id=' . $event['id']); ?>" 
+                                       class="btn btn-primary w-100">View Event</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="fa fa-calendar" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem;"></i>
+                        <h4 class="text-muted">No events yet</h4>
+                        <p class="text-muted">Stay tuned for upcoming events and updates!</p>
+                        <?php if (SessionManager::isAdmin()): ?>
+                            <a href="<?php echo smartUrl('event/create.php'); ?>" class="btn btn-primary mt-3">Create First Event</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="<?php echo smartUrl('event/list.php'); ?>" class="btn btn-outline-primary">View All Events</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="contact section">
     <div class="container">
         <div class="row">
@@ -546,6 +630,109 @@ ob_start();
         </div>
     </div>
 </div>
+
+<!-- Custom CSS for Events Section -->
+<style>
+.events.section {
+    padding: 100px 0;
+    background-color: #f8f9fa;
+}
+
+.event-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.15);
+}
+
+.event-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.event-card .placeholder-img {
+    height: 200px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.event-card .card-title {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.event-card .card-text {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.event-card .btn-primary {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.event-card .btn-primary:hover {
+    background: linear-gradient(45deg, #ff5252, #ff7979);
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: #ff6b6b;
+    border-color: #ff6b6b;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.events .section-heading h6 {
+    color: #ff6b6b;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.events .section-heading h2 {
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.text-muted i {
+    margin-right: 5px;
+}
+
+@media (max-width: 768px) {
+    .events.section {
+        padding: 60px 0;
+    }
+    
+    .event-card .card-img-top,
+    .event-card .placeholder-img {
+        height: 180px;
+    }
+}
+</style>
 
 <?php
 // Get the content

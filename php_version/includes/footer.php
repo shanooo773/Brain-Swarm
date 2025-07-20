@@ -67,7 +67,7 @@ $cdn_js_assets = [
                         </li>
 
                         <li class="site-footer-link-item">
-                            <a href="<?php echo smartUrl('blog/list.php'); ?>" class="site-footer-link">Blog</a>
+                            <a href="<?php echo smartUrl('event/list.php'); ?>" class="site-footer-link">Events</a>
                         </li>
 
                         <li class="site-footer-link-item">

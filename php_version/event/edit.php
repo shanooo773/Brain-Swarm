@@ -4,27 +4,27 @@ require_once '../includes/functions.php';
 // Require admin access
 requireAdmin();
 
-// Get blog ID from URL
-$blog_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Get event ID from URL
+$event_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-if (!$blog_id) {
-    setFlashMessage('error', 'Blog post not found.');
-    redirect(smartUrl('blog/list.php'));
+if (!$event_id) {
+    setFlashMessage('error', 'Event not found.');
+    redirect(smartUrl('event/list.php'));
 }
 
-// Get existing blog post
+// Get existing event
 $db = Database::getInstance();
-$blog = $db->fetch("SELECT * FROM blogs WHERE id = ?", [$blog_id]);
+$event = $db->fetch("SELECT * FROM event WHERE id = ?", [$event_id]);
 
-if (!$blog) {
-    setFlashMessage('error', 'Blog post not found.');
-    redirect(smartUrl('blog/list.php'));
+if (!$event) {
+    setFlashMessage('error', 'Event not found.');
+    redirect(smartUrl('event/list.php'));
 }
 
-$page_title = 'Edit: ' . htmlspecialchars($blog['title']);
+$page_title = 'Edit: ' . htmlspecialchars($event['title']);
 
 $errors = [];
-$form_data = $blog; // Initialize form with existing data
+$form_data = $event; // Initialize form with existing data
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = sanitizeInput($_POST['title'] ?? '');
@@ -39,13 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($error = validateLength($title, 3, 200, 'Title')) $errors[] = $error;
     
     // Handle image upload
-    $image_filename = $blog['image']; // Keep existing image by default
+    $image_filename = $event['image']; // Keep existing image by default
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $upload_result = uploadFile($_FILES['image'], BLOG_IMAGES_DIR, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+        $upload_result = uploadFile($_FILES['image'], EVENT_IMAGES_DIR, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
         if ($upload_result['success']) {
             // Delete old image if it exists
-            if (!empty($blog['image']) && file_exists(BLOG_IMAGES_DIR . $blog['image'])) {
-                unlink(BLOG_IMAGES_DIR . $blog['image']);
+            if (!empty($event['image']) && file_exists(EVENT_IMAGES_DIR . $event['image'])) {
+                unlink(EVENT_IMAGES_DIR . $event['image']);
             }
             $image_filename = $upload_result['filename'];
         } else {
@@ -56,14 +56,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         try {
             $db->query(
-                "UPDATE blogs SET title = ?, content = ?, image = ?, updated_at = NOW() WHERE id = ?",
-                [$title, $content, $image_filename, $blog_id]
+                "UPDATE event SET title = ?, content = ?, image = ?, updated_at = NOW() WHERE id = ?",
+                [$title, $content, $image_filename, $event_id]
             );
             
-            setFlashMessage('success', 'Blog post updated successfully!');
-            redirect(smartUrl('blog/detail.php?id=' . $blog_id));
+            setFlashMessage('success', 'Event updated successfully!');
+            redirect(smartUrl('event/detail.php?id=' . $event_id));
         } catch (Exception $e) {
-            $errors[] = 'There was an error updating the blog post. Please try again.';
+            $errors[] = 'There was an error updating the event. Please try again.';
         }
     }
 }
@@ -77,7 +77,7 @@ ob_start();
         <div class="col-lg-8 mx-auto">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mb-0">Edit Blog Post</h2>
+                    <h2 class="mb-0">Edit Event Post</h2>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($errors)): ?>
@@ -92,20 +92,20 @@ ob_start();
                     
                     <form method="post" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <label for="title" class="form-label">Blog Title</label>
+                            <label for="title" class="form-label">Event Title</label>
                             <input type="text" class="form-control" id="title" name="title" 
-                                   placeholder="Enter blog title" 
+                                   placeholder="Enter event title" 
                                    value="<?php echo htmlspecialchars($form_data['title'] ?? ''); ?>" required>
                         </div>
                         
                         <div class="mb-3">
                             <label for="image" class="form-label">Featured Image</label>
                             
-                            <?php if (!empty($blog['image'])): ?>
+                            <?php if (!empty($event['image'])): ?>
                                 <div class="current-image mb-2">
                                     <p class="text-muted">Current image:</p>
-                                    <img src="<?php echo smartUrl('uploads/blog_images/' . $blog['image']); ?>" 
-                                         alt="Current blog image" 
+                                    <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
+                                         alt="Current event image" 
                                          class="img-thumbnail" 
                                          style="max-width: 200px; max-height: 150px;">
                                 </div>
@@ -113,7 +113,7 @@ ob_start();
                             
                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
                             <div class="form-text">
-                                <?php if (!empty($blog['image'])): ?>
+                                <?php if (!empty($event['image'])): ?>
                                     Upload a new image to replace the current one, or leave empty to keep the current image.
                                 <?php else: ?>
                                     Upload an image (optional).
@@ -123,22 +123,22 @@ ob_start();
                         </div>
                         
                         <div class="mb-3">
-                            <label for="content" class="form-label">Blog Content</label>
+                            <label for="content" class="form-label">Event Content</label>
                             <textarea class="form-control" id="content" name="content" rows="15" 
-                                      placeholder="Write your blog content here..." required><?php echo htmlspecialchars($form_data['content'] ?? ''); ?></textarea>
+                                      placeholder="Write your event content here..." required><?php echo htmlspecialchars($form_data['content'] ?? ''); ?></textarea>
                         </div>
                         
                         <div class="d-flex justify-content-between">
                             <div>
-                                <a href="<?php echo smartUrl('blog/detail.php?id=' . $blog_id); ?>" class="btn btn-secondary">
+                                <a href="<?php echo smartUrl('event/detail.php?id=' . $event_id); ?>" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left"></i> Back to Post
                                 </a>
-                                <a href="<?php echo smartUrl('blog/list.php'); ?>" class="btn btn-outline-secondary ms-2">
+                                <a href="<?php echo smartUrl('event/list.php'); ?>" class="btn btn-outline-secondary ms-2">
                                     <i class="bi bi-list"></i> All Posts
                                 </a>
                             </div>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save"></i> Update Blog Post
+                                <i class="bi bi-save"></i> Update Event Post
                             </button>
                         </div>
                     </form>

@@ -263,7 +263,7 @@ function requireAuth() {
         // Determine relative path to sign-in.php
         $script_dir = dirname($_SERVER['SCRIPT_NAME']);
         $base_dir = str_replace('/admin', '', $script_dir);
-        $base_dir = str_replace('/blog', '', $base_dir);
+        $base_dir = str_replace('/event', '', $base_dir);
         $signin_path = $base_dir . '/sign-in.php';
         redirect($signin_path);
     }
@@ -276,7 +276,7 @@ function requireAdmin() {
         // Determine relative path to index.php
         $script_dir = dirname($_SERVER['SCRIPT_NAME']);
         $base_dir = str_replace('/admin', '', $script_dir);
-        $base_dir = str_replace('/blog', '', $base_dir);
+        $base_dir = str_replace('/event', '', $base_dir);
         $index_path = $base_dir . '/index.php';
         redirect($index_path);
     }
