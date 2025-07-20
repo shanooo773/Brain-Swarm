@@ -46,7 +46,7 @@ ob_start();
                     <div class="featured-image mb-4">
                         <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
                              alt="<?php echo htmlspecialchars($event['title']); ?>" 
-                             class="img-fluid rounded expandable-image" 
+                             class="img-fluid rounded expandable-image event-image" 
                              data-full-src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>">
                     </div>
                 <?php endif; ?>
@@ -164,6 +164,11 @@ $extra_css = '
     font-size: 0.95rem;
 }
 
+.featured-image {
+    overflow: hidden;
+    border-radius: 12px;
+}
+
 .featured-image img {
     width: 100%;
     height: auto;
@@ -172,7 +177,15 @@ $extra_css = '
 }
 
 .featured-image img:hover {
-    transform: scale(1.02);
+    transform: scale(1.1);
+}
+
+.event-image {
+    transition: transform 0.3s ease;
+}
+
+.event-image:hover {
+    transform: scale(1.1);
 }
 
 .expandable-image {
