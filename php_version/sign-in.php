@@ -82,7 +82,7 @@ ob_start();
                     </form>
                     
                     <div class="text-center">
-                        <p class="mb-0">Don't have an account? <a href="<?php echo url('sign-up.php'); ?>" class="text-decoration-none">Sign Up</a></p>
+                        <p class="mb-0">Don't have an account? <a href="<?php echo smartUrl('sign-up.php'); ?>" class="text-decoration-none">Sign Up</a></p>
                     </div>
                 </div>
             </div>
@@ -123,5 +123,5 @@ $extra_css = '
 $content = ob_get_clean();
 
 // Include the base template
-include 'templates/base.php';
+include 'templates/base_enhanced.php';
 ?>

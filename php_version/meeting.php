@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             
             setFlashMessage('success', 'Thank you for scheduling a meeting! We will contact you to confirm the details.');
-            redirect(url('meeting.php'));
+            redirect(smartUrl('meeting.php'));
         } catch (Exception $e) {
             $meeting_errors[] = 'There was an error submitting your meeting request. Please try again.';
         }
@@ -151,5 +151,5 @@ ob_start();
 $content = ob_get_clean();
 
 // Include the base template
-include 'templates/base.php';
+include 'templates/base_enhanced.php';
 ?>

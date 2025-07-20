@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             
             setFlashMessage('success', 'Thank you for contacting us! We will respond to your inquiry soon.');
-            redirect(url('contact.php'));
+            redirect(smartUrl('contact.php'));
         } catch (Exception $e) {
             $contact_errors[] = 'There was an error submitting your message. Please try again.';
         }
@@ -47,7 +47,7 @@ ob_start();
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <span class="breadcrumb"><a href="<?php echo url(); ?>">Home</a> / Contact Us</span>
+                <span class="breadcrumb"><a href="<?php echo smartUrl(); ?>">Home</a> / Contact Us</span>
                 <h3>Contact Us</h3>
             </div>
         </div>
@@ -68,13 +68,13 @@ ob_start();
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="item phone">
-                            <img src="<?php echo asset('assets/images/phone-icon.png'); ?>" alt="" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/phone-icon.png'); ?>" alt="" style="max-width: 52px;">
                             <h6>010-020-0340<br><span>Phone Number</span></h6>
                         </div>
                     </div>
                     <div class="col-lg-12">
                         <div class="item email">
-                            <img src="<?php echo asset('assets/images/email-icon.png'); ?>" alt="" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/email-icon.png'); ?>" alt="" style="max-width: 52px;">
                             <h6>info@villa.co<br><span>Business Email</span></h6>
                         </div>
                     </div>
@@ -146,6 +146,6 @@ ob_start();
 // Get the content
 $content = ob_get_clean();
 
-// Include the base template
-include 'templates/base.php';
+// Include the enhanced base template
+include 'templates/base_enhanced.php';
 ?>

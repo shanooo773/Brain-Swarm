@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $blog_id = $db->lastInsertId();
             
             setFlashMessage('success', 'Blog post created successfully!');
-            redirect(url('blog/detail.php?id=' . $blog_id));
+            redirect(smartUrl('blog/detail.php?id=' . $blog_id));
         } catch (Exception $e) {
             $errors[] = 'There was an error creating the blog post. Please try again.';
             
@@ -101,7 +101,7 @@ ob_start();
                         </div>
                         
                         <div class="d-flex justify-content-between">
-                            <a href="<?php echo url('blog/list.php'); ?>" class="btn btn-secondary">
+                            <a href="<?php echo smartUrl('blog/list.php'); ?>" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left"></i> Back to Blog
                             </a>
                             <button type="submit" class="btn btn-primary">

@@ -6,7 +6,7 @@ $blog_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if (!$blog_id) {
     setFlashMessage('error', 'Blog post not found.');
-    redirect(url('blog/list.php'));
+    redirect(smartUrl('blog/list.php'));
 }
 
 // Get blog post with author info
@@ -21,7 +21,7 @@ $blog = $db->fetch(
 
 if (!$blog) {
     setFlashMessage('error', 'Blog post not found.');
-    redirect(url('blog/list.php'));
+    redirect(smartUrl('blog/list.php'));
 }
 
 $page_title = htmlspecialchars($blog['title']) . ' - Brain Swarm';
@@ -44,10 +44,10 @@ ob_start();
                 <!-- Featured Image -->
                 <?php if (!empty($blog['image'])): ?>
                     <div class="featured-image mb-4">
-                        <img src="<?php echo url('uploads/blog_images/' . $blog['image']); ?>" 
+                        <img src="<?php echo smartUrl('uploads/blog_images/' . $blog['image']); ?>" 
                              alt="<?php echo htmlspecialchars($blog['title']); ?>" 
                              class="img-fluid rounded expandable-image" 
-                             data-full-src="<?php echo url('uploads/blog_images/' . $blog['image']); ?>">
+                             data-full-src="<?php echo smartUrl('uploads/blog_images/' . $blog['image']); ?>">
                     </div>
                 <?php endif; ?>
                 
@@ -66,10 +66,10 @@ ob_start();
                         
                         <?php if (SessionManager::isAdmin()): ?>
                             <div class="btn-group" role="group">
-                                <a href="<?php echo url('blog/edit.php?id=' . $blog['id']); ?>" class="btn btn-outline-warning btn-sm">
+                                <a href="<?php echo smartUrl('blog/edit.php?id=' . $blog['id']); ?>" class="btn btn-outline-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
-                                <a href="<?php echo url('blog/delete.php?id=' . $blog['id']); ?>" class="btn btn-outline-danger btn-sm">
+                                <a href="<?php echo smartUrl('blog/delete.php?id=' . $blog['id']); ?>" class="btn btn-outline-danger btn-sm">
                                     <i class="bi bi-trash"></i> Delete
                                 </a>
                             </div>
@@ -86,13 +86,13 @@ ob_start();
                 <div class="blog-navigation mt-5 pt-4 border-top">
                     <div class="row">
                         <div class="col-md-6">
-                            <a href="<?php echo url('blog/list.php'); ?>" class="btn btn-outline-primary">
+                            <a href="<?php echo smartUrl('blog/list.php'); ?>" class="btn btn-outline-primary">
                                 <i class="bi bi-arrow-left"></i> Back to Blog
                             </a>
                         </div>
                         <div class="col-md-6 text-end">
                             <?php if (SessionManager::isAdmin()): ?>
-                                <a href="<?php echo url('blog/create.php'); ?>" class="btn btn-primary">
+                                <a href="<?php echo smartUrl('blog/create.php'); ?>" class="btn btn-primary">
                                     <i class="bi bi-plus-lg"></i> New Post
                                 </a>
                             <?php endif; ?>
