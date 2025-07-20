@@ -45,10 +45,10 @@ ob_start();
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow-sm">
                         <?php if (!empty($event['image'])): ?>
-                            <img src="<?php echo smartUrl('event/uploads/event_images/' . $event['image']); ?>" 
+                            <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
                                  alt="<?php echo htmlspecialchars($event['title']); ?>" 
                                  class="card-img-top expandable-image event-image" 
-                                 data-full-src="<?php echo smartUrl('event/uploads/event_images/' . $event['image']); ?>">
+                                 data-full-src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>">
                         <?php endif; ?>
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title"><?php echo htmlspecialchars($event['title']); ?></h5>

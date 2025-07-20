@@ -44,10 +44,10 @@ ob_start();
                 <!-- Featured Image -->
                 <?php if (!empty($event['image'])): ?>
                     <div class="featured-image mb-4">
-                        <img src="<?php echo smartUrl('event/uploads/event_images/' . $event['image']); ?>" 
+                        <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
                              alt="<?php echo htmlspecialchars($event['title']); ?>" 
                              class="img-fluid rounded expandable-image event-image" 
-                             data-full-src="<?php echo smartUrl('event/uploads/event_images/' . $event['image']); ?>">
+                             data-full-src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>">
                     </div>
                 <?php endif; ?>
                 
