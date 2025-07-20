@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Brain Swarm{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h1 class="h2">Admin Dashboard</h1>
+                <span class="badge bg-primary">Welcome, {{ user.username }}!</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fa fa-file-text fa-2x text-primary mb-2"></i>
+                    <h5 class="card-title">{{ total_blogs }}</h5>
+                    <p class="card-text">Total Blog Posts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fa fa-envelope fa-2x text-success mb-2"></i>
+                    <h5 class="card-title">{{ total_form_submissions }}</h5>
+                    <p class="card-text">Form Submissions</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fa fa-user fa-2x text-info mb-2"></i>
+                    <h5 class="card-title">Admin</h5>
+                    <p class="card-text">User Status</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fa fa-dashboard fa-2x text-warning mb-2"></i>
+                    <h5 class="card-title">Active</h5>
+                    <p class="card-text">Dashboard Status</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'blog_create' %}" class="btn btn-primary w-100">
+                                <i class="fa fa-plus"></i> Create New Blog Post
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'blog_list' %}" class="btn btn-info w-100">
+                                <i class="fa fa-list"></i> View All Blogs
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/" class="btn btn-success w-100" target="_blank">
+                                <i class="fa fa-cogs"></i> Django Admin
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'home' %}" class="btn btn-secondary w-100">
+                                <i class="fa fa-home"></i> Back to Site
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Blog Posts -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Blog Posts</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_blogs %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for blog in recent_blogs %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'blog_detail' blog.id %}" class="text-decoration-none">
+                                                {{ blog.title|truncatechars:50 }}
+                                            </a>
+                                        </td>
+                                        <td>{{ blog.author.username }}</td>
+                                        <td>{{ blog.created_at|date:"M d, Y" }}</td>
+                                        <td>
+                                            <a href="{% url 'blog_edit' blog.id %}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'blog_delete' blog.id %}" class="btn btn-sm btn-outline-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{% url 'blog_list' %}" class="btn btn-outline-primary">View All Blog Posts</a>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No blog posts yet. <a href="{% url 'blog_create' %}">Create your first blog post</a>!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Form Submissions -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Form Submissions</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_submissions %}
+                        {% for submission in recent_submissions %}
+                        <div class="border-bottom pb-2 mb-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">{{ submission.name }}</h6>
+                                    <small class="text-muted">{{ submission.get_form_type_display }}</small>
+                                </div>
+                                <small class="text-muted">{{ submission.submitted_at|date:"M d" }}</small>
+                            </div>
+                            <p class="small mb-1">{{ submission.email }}</p>
+                            {% if submission.message %}
+                                <p class="small text-muted mb-0">{{ submission.message|truncatechars:80 }}</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <div class="mt-3">
+                            <a href="/admin/main/formsubmission/" class="btn btn-outline-success btn-sm">View All Submissions</a>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No form submissions yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    border: none;
+    border-radius: 12px 12px 0 0;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #ff5252, #ff7979);
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: #333;
+}
+
+.badge {
+    border-radius: 20px;
+    padding: 8px 16px;
+}
+
+.fa-2x {
+    margin-bottom: 10px;
+}
+</style>
+{% endblock %}

@@ -12,8 +12,11 @@ urlpatterns = [
     
     # Authentication URLs
     path('sign-up/', views.sign_up, name='sign_up'),
-    path('sign-in/', auth_views.LoginView.as_view(template_name='auth/sign_in.html'), name='sign_in'),
+    path('sign-in/', views.sign_in, name='sign_in'),
     path('sign-out/', views.sign_out, name='sign_out'),
+    
+    # Admin URLs
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     
     # Blog URLs
     path('blog/', views.blog_list, name='blog_list'),
