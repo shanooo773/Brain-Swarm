@@ -69,7 +69,7 @@ ob_start();
                         <h5 class="mb-2"><?php echo htmlspecialchars($event['title']); ?></h5>
                         
                         <?php if (!empty($event['image'])): ?>
-                            <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
+                            <img src="<?php echo smartUrl('event/uploads/event_images/' . $event['image']); ?>" 
                                  alt="<?php echo htmlspecialchars($event['title']); ?>" 
                                  class="img-fluid rounded mb-2" 
                                  style="max-height: 150px;">
