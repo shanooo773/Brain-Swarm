@@ -56,7 +56,7 @@ ob_start();
                 <small>ACCELERATING INNOVATIVE RESEARCH</small>
                 <br>
 
-                <a class="btn custom-btn smoothscroll mt-5" href="<?php echo url('property-details.php'); ?>">Let's begin</a>
+                <a class="btn custom-btn smoothscroll mt-5" href="<?php echo smartUrl('property-details.php'); ?>">Let's begin</a>
             </div>
 
             <div class="col-lg-12 col-12 mt-auto d-flex flex-column flex-lg-row text-center">
@@ -103,7 +103,7 @@ ob_start();
 
     <div class="video-wrap">
         <video autoplay="" loop="" muted="" class="custom-video" poster="">
-            <source src="<?php echo asset('video/pexels-2022395.mp4'); ?>" type="video/mp4">
+            <source src="<?php echo smartAsset('video/pexels-2022395.mp4'); ?>" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
@@ -114,8 +114,8 @@ ob_start();
         <div class="row">
             <div class="col-lg-4">
                 <div class="left-image">
-                    <img src="<?php echo asset('assets/images/featured.jpg'); ?>" alt="">
-                    <a href="<?php echo url('property-details.php'); ?>"><img src="<?php echo asset('assets/images/featured-icon.png'); ?>" alt="" style="max-width: 60px; padding: 0px;"></a>
+                    <img src="<?php echo smartAsset('assets/images/featured.jpg'); ?>" alt="">
+                    <a href="<?php echo smartUrl('property-details.php'); ?>"><img src="<?php echo smartAsset('assets/images/featured-icon.png'); ?>" alt="" style="max-width: 60px; padding: 0px;"></a>
                 </div>
             </div>
             <div class="col-lg-5">
@@ -166,19 +166,19 @@ ob_start();
                 <div class="info-table">
                     <ul>
                         <li>
-                            <img src="<?php echo asset('assets/images/info-icon-01.png'); ?>" alt="Lab Space Icon" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/info-icon-01.png'); ?>" alt="Lab Space Icon" style="max-width: 52px;">
                             <h4>Lab-Ready<br><span>Turnkey Academic</span></h4>
                         </li>
                         <li>
-                            <img src="<?php echo asset('assets/images/info-icon-02.png'); ?>" alt="Partnership Icon" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/info-icon-02.png'); ?>" alt="Partnership Icon" style="max-width: 52px;">
                             <h4>Collaboration<br><span>Partnered Universities</span></h4>
                         </li>
                         <li>
-                            <img src="<?php echo asset('assets/images/info-icon-03.png'); ?>" alt="Scalability Icon" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/info-icon-03.png'); ?>" alt="Scalability Icon" style="max-width: 52px;">
                             <h4>Scalable<br><span>Cross-Department</span></h4>
                         </li>
                         <li>
-                            <img src="<?php echo asset('assets/images/info-icon-04.png'); ?>" alt="Support Icon" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/info-icon-04.png'); ?>" alt="Support Icon" style="max-width: 52px;">
                             <h4>Academic<br><span>R&D Expertise</span></h4>
                         </li>
                     </ul>
@@ -206,7 +206,7 @@ ob_start();
         <div class="row">
             <div class="col-lg-10 offset-lg-1">
                 <div class="video-frame">
-                    <img src="<?php echo asset('assets/images/video-frame.jpg'); ?>" alt="">
+                    <img src="<?php echo smartAsset('assets/images/video-frame.jpg'); ?>" alt="">
                     <a href="https://www.facebook.com/BrainSwarming/" target="_blank"><i class="fa fa-play"></i></a>
                 </div>
             </div>
@@ -285,13 +285,13 @@ ob_start();
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <img src="<?php echo asset('assets/images/single1-property.jpg'); ?>" alt="">
+                                        <img src="<?php echo smartAsset('assets/images/single1-property.jpg'); ?>" alt="">
                                     </div>
                                     <div class="col-lg-3">
                                         <h4>Swarm Robotics Development Kit</h4>
                                         <p>Our most advanced swarm solution for AI experimentation, pathfinding, collective behavior, and coordination studies. Used by top research labs worldwide.</p>
                                         <div class="icon-button">
-                                            <a href="<?php echo url('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
+                                            <a href="<?php echo smartUrl('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
                                         </div>
                                     </div>
                                 </div>
@@ -310,13 +310,13 @@ ob_start();
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <img src="<?php echo asset('assets/images/single2.jpg'); ?>" alt="">
+                                        <img src="<?php echo smartAsset('assets/images/single2.jpg'); ?>" alt="">
                                     </div>
                                     <div class="col-lg-3">
                                         <h4>AI-Powered Aerial Drone Kit</h4>
                                         <p>Fully integrated drone platform for aerial data collection, autonomous flight path testing, and embedded vision research. Comes with simulation support and SDKs.</p>
                                         <div class="icon-button">
-                                            <a href="<?php echo url('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
+                                            <a href="<?php echo smartUrl('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
                                         </div>
                                     </div>
                                 </div>
@@ -335,13 +335,13 @@ ob_start();
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <img src="<?php echo asset('assets/images/single3.jpg'); ?>" alt="">
+                                        <img src="<?php echo smartAsset('assets/images/single3.jpg'); ?>" alt="">
                                     </div>
                                     <div class="col-lg-3">
                                         <h4>Precision Robotic Arm Platform</h4>
                                         <p>Engineered for teaching and research in robotics control, computer vision, and kinematics. Built-in curriculum available for academic use.</p>
                                         <div class="icon-button">
-                                            <a href="<?php echo url('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
+                                            <a href="<?php echo smartUrl('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
                                         </div>
                                     </div>
                                 </div>
@@ -366,7 +366,7 @@ ob_start();
                 <div class="col-lg-5 col-12">
                     <div class="artists-thumb">
                         <div class="artists-image-wrap">
-                            <img src="<?php echo asset('images/artists/joecalih-UmTZqmMvQcw-unsplash.jpg'); ?>" class="artists-image img-fluid">
+                            <img src="<?php echo smartAsset('images/artists/joecalih-UmTZqmMvQcw-unsplash.jpg'); ?>" class="artists-image img-fluid">
                         </div>
 
                         <div class="artists-hover">
@@ -398,7 +398,7 @@ ob_start();
                 <div class="col-lg-5 col-12">
                     <div class="artists-thumb">
                         <div class="artists-image-wrap">
-                            <img src="<?php echo asset('images/artists/abstral-official-bdlMO9z5yco-unsplash.jpg'); ?>" class="artists-image img-fluid">
+                            <img src="<?php echo smartAsset('images/artists/abstral-official-bdlMO9z5yco-unsplash.jpg'); ?>" class="artists-image img-fluid">
                         </div>
 
                         <div class="artists-hover">
@@ -427,7 +427,7 @@ ob_start();
                     </div>
 
                     <div class="artists-thumb">
-                        <img src="<?php echo asset('images/artists/soundtrap-rAT6FJ6wltE-unsplash.jpg'); ?>" class="artists-image img-fluid">
+                        <img src="<?php echo smartAsset('images/artists/soundtrap-rAT6FJ6wltE-unsplash.jpg'); ?>" class="artists-image img-fluid">
 
                         <div class="artists-hover">
                             <p>
@@ -483,13 +483,13 @@ ob_start();
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="item phone">
-                            <img src="<?php echo asset('assets/images/phone-icon.png'); ?>" alt="" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/phone-icon.png'); ?>" alt="" style="max-width: 52px;">
                             <h6>010-020-0340<br><span>Phone Number</span></h6>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="item email">
-                            <img src="<?php echo asset('assets/images/email-icon.png'); ?>" alt="" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/email-icon.png'); ?>" alt="" style="max-width: 52px;">
                             <h6>info@villa.co<br><span>Business Email</span></h6>
                         </div>
                     </div>
@@ -551,6 +551,6 @@ ob_start();
 // Get the content
 $content = ob_get_clean();
 
-// Include the base template
-include 'templates/base.php';
+// Include the enhanced base template
+include 'templates/base_enhanced.php';
 ?>

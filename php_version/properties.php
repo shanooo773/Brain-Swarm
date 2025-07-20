@@ -30,7 +30,7 @@ ob_start();
                 <div class="col-lg-5 col-12">
                     <div class="artists-thumb">
                         <div class="artists-image-wrap">
-                            <img src="<?php echo asset('images/artists/joecalih-UmTZqmMvQcw-unsplash.jpg'); ?>" class="artists-image img-fluid">
+                            <img src="<?php echo smartAsset('images/artists/joecalih-UmTZqmMvQcw-unsplash.jpg'); ?>" class="artists-image img-fluid">
                         </div>
 
                         <div class="artists-hover">
@@ -62,7 +62,7 @@ ob_start();
                 <div class="col-lg-5 col-12">
                     <div class="artists-thumb">
                         <div class="artists-image-wrap">
-                            <img src="<?php echo asset('images/artists/abstral-official-bdlMO9z5yco-unsplash.jpg'); ?>" class="artists-image img-fluid">
+                            <img src="<?php echo smartAsset('images/artists/abstral-official-bdlMO9z5yco-unsplash.jpg'); ?>" class="artists-image img-fluid">
                         </div>
 
                         <div class="artists-hover">
@@ -91,7 +91,7 @@ ob_start();
                     </div>
 
                     <div class="artists-thumb">
-                        <img src="<?php echo asset('images/artists/soundtrap-rAT6FJ6wltE-unsplash.jpg'); ?>" class="artists-image img-fluid">
+                        <img src="<?php echo smartAsset('images/artists/soundtrap-rAT6FJ6wltE-unsplash.jpg'); ?>" class="artists-image img-fluid">
 
                         <div class="artists-hover">
                             <p>

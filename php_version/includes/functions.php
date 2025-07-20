@@ -205,6 +205,42 @@ function asset($path) {
     return url('static/' . ltrim($path, '/'));
 }
 
+// Enhanced URL helper functions that work with any port/environment
+function getBaseUrl() {
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $script_name = dirname($_SERVER['SCRIPT_NAME']);
+    $base_path = $script_name === '/' ? '' : $script_name;
+    return $protocol . $host . $base_path;
+}
+
+function smartUrl($path = '') {
+    return getBaseUrl() . '/' . ltrim($path, '/');
+}
+
+function smartAsset($path) {
+    return smartUrl('static/' . ltrim($path, '/'));
+}
+
+// Asset verification function
+function assetExists($path) {
+    $full_path = __DIR__ . '/../static/' . ltrim($path, '/');
+    return file_exists($full_path);
+}
+
+// Asset with CDN fallback
+function assetWithFallback($path, $cdnUrl = null) {
+    $localUrl = smartAsset($path);
+    
+    if (assetExists($path)) {
+        return $localUrl;
+    } elseif ($cdnUrl) {
+        return $cdnUrl;
+    } else {
+        return $localUrl; // Return local URL even if missing for debugging
+    }
+}
+
 // Authentication helpers
 function requireAuth() {
     if (!SessionManager::isLoggedIn()) {

@@ -3,6 +3,32 @@ RewriteEngine On
 # Disable directory browsing
 Options -Indexes
 
+# Fix MIME types for common web assets
+<IfModule mod_mime.c>
+    # CSS and JavaScript Files
+    AddType text/css .css
+    AddType application/javascript .js
+    AddType application/javascript .mjs
+    
+    # Font Files
+    AddType font/woff .woff
+    AddType font/woff2 .woff2
+    AddType application/font-woff .woff
+    AddType application/font-woff2 .woff2
+    AddType application/vnd.ms-fontobject .eot
+    AddType font/truetype .ttf
+    AddType font/opentype .otf
+    
+    # Image Files
+    AddType image/svg+xml .svg
+    AddType image/webp .webp
+    
+    # Video Files
+    AddType video/mp4 .mp4
+    AddType video/webm .webm
+    AddType video/ogg .ogv
+</IfModule>
+
 # Redirect HTTP to HTTPS (uncomment for production)
 # RewriteCond %{HTTPS} off
 # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

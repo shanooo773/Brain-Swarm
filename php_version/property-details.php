@@ -24,7 +24,7 @@ ob_start();
         <div class="row">
             <div class="col-lg-8">
                 <div class="main-image">
-                    <img src="<?php echo asset('assets/images/single-property.jpg'); ?>" alt="BrainSwarm Robotics Platform">
+                    <img src="<?php echo smartAsset('assets/images/single-property.jpg'); ?>" alt="BrainSwarm Robotics Platform">
                 </div>
                 <div class="main-content">
                     <span class="category">Swarm Robotics</span>
@@ -81,19 +81,19 @@ ob_start();
                 <div class="info-table">
                     <ul>
                         <li>
-                            <img src="<?php echo asset('assets/images/info-icon-01.png'); ?>" alt="Lab Space Icon" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/info-icon-01.png'); ?>" alt="Lab Space Icon" style="max-width: 52px;">
                             <h4>Edge AI<br><span>Real-time decision making</span></h4>
                         </li>
                         <li>
-                            <img src="<?php echo asset('assets/images/info-icon-02.png'); ?>" alt="Partnership Icon" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/info-icon-02.png'); ?>" alt="Partnership Icon" style="max-width: 52px;">
                             <h4>Global Research<br><span>Collaborated 50+ institutes</span></h4>
                         </li>
                         <li>
-                            <img src="<?php echo asset('assets/images/info-icon-03.png'); ?>" alt="Scalability Icon" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/info-icon-03.png'); ?>" alt="Scalability Icon" style="max-width: 52px;">
                             <h4>Modular Kits<br><span>Flexible hardware integration</span></h4>
                         </li>
                         <li>
-                            <img src="<?php echo asset('assets/images/info-icon-04.png'); ?>" alt="Support Icon" style="max-width: 52px;">
+                            <img src="<?php echo smartAsset('assets/images/info-icon-04.png'); ?>" alt="Support Icon" style="max-width: 52px;">
                             <h4>24/7 Support<br><span>Global academic assistance</span></h4>
                         </li>
                     </ul>
@@ -143,13 +143,13 @@ ob_start();
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <img src="<?php echo asset('assets/images/single1-property.jpg'); ?>" alt="">
+                                        <img src="<?php echo smartAsset('assets/images/single1-property.jpg'); ?>" alt="">
                                     </div>
                                     <div class="col-lg-3">
                                         <h4>Swarm Robotics Development Kit</h4>
                                         <p>Our most advanced swarm solution for AI experimentation, pathfinding, collective behavior, and coordination studies. Used by top research labs worldwide.</p>
                                         <div class="icon-button">
-                                            <a href="<?php echo url('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
+                                            <a href="<?php echo smartUrl('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
                                         </div>
                                     </div>
                                 </div>
@@ -168,13 +168,13 @@ ob_start();
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <img src="<?php echo asset('assets/images/single2.jpg'); ?>" alt="">
+                                        <img src="<?php echo smartAsset('assets/images/single2.jpg'); ?>" alt="">
                                     </div>
                                     <div class="col-lg-3">
                                         <h4>AI-Powered Aerial Drone Kit</h4>
                                         <p>Fully integrated drone platform for aerial data collection, autonomous flight path testing, and embedded vision research. Comes with simulation support and SDKs.</p>
                                         <div class="icon-button">
-                                            <a href="<?php echo url('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
+                                            <a href="<?php echo smartUrl('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
                                         </div>
                                     </div>
                                 </div>
@@ -193,13 +193,13 @@ ob_start();
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <img src="<?php echo asset('assets/images/single3.jpg'); ?>" alt="">
+                                        <img src="<?php echo smartAsset('assets/images/single3.jpg'); ?>" alt="">
                                     </div>
                                     <div class="col-lg-3">
                                         <h4>Precision Robotic Arm Platform</h4>
                                         <p>Engineered for teaching and research in robotics control, computer vision, and kinematics. Built-in curriculum available for academic use.</p>
                                         <div class="icon-button">
-                                            <a href="<?php echo url('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
+                                            <a href="<?php echo smartUrl('meeting.php'); ?>"><i class="fa fa-calendar"></i> Request a Demo</a>
                                         </div>
                                     </div>
                                 </div>

@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
                 
                 setFlashMessage('success', 'Account created successfully! You can now log in.');
-                redirect(url('sign-in.php'));
+                redirect(smartUrl('sign-in.php'));
             }
         } catch (Exception $e) {
             $errors[] = 'An error occurred while creating your account. Please try again.';
@@ -128,7 +128,7 @@ ob_start();
                     </form>
                     
                     <div class="text-center">
-                        <p class="mb-0">Already have an account? <a href="<?php echo url('sign-in.php'); ?>" class="text-decoration-none">Sign In</a></p>
+                        <p class="mb-0">Already have an account? <a href="<?php echo smartUrl('sign-in.php'); ?>" class="text-decoration-none">Sign In</a></p>
                     </div>
                 </div>
             </div>
