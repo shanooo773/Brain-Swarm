@@ -156,11 +156,17 @@ function uploadFile($file, $uploadDir, $allowedTypes = ['jpg', 'jpeg', 'png', 'g
     }
     
     $newFilename = uniqid() . '.' . $extension;
-    $targetPath = $uploadDir . $newFilename;
-    
-    if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-        return ['success' => true, 'filename' => $newFilename, 'path' => $targetPath];
-    }
+   // Ensure upload directory exists
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0777, true); // create recursively
+}
+
+$targetPath = $uploadDir . $newFilename;
+
+if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+    return ['success' => true, 'filename' => $newFilename, 'path' => $targetPath];
+}
+
     
     return ['success' => false, 'message' => 'Failed to move uploaded file'];
 }
