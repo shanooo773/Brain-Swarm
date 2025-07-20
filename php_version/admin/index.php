@@ -9,18 +9,11 @@ $page_title = 'Admin Dashboard - Brain Swarm';
 // Get statistics
 $db = Database::getInstance();
 
-// Build SQL queries that work with both MySQL and SQLite
-if (defined('USE_SQLITE') && USE_SQLITE) {
-    $recent_submissions_sql = "SELECT COUNT(*) as count FROM form_submissions WHERE submitted_at >= datetime('now', '-7 day')";
-} else {
-    $recent_submissions_sql = "SELECT COUNT(*) as count FROM form_submissions WHERE submitted_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
-}
-
 $stats = [
     'total_blogs' => $db->fetch("SELECT COUNT(*) as count FROM blogs")['count'],
     'total_users' => $db->fetch("SELECT COUNT(*) as count FROM users")['count'],
     'total_submissions' => $db->fetch("SELECT COUNT(*) as count FROM form_submissions")['count'],
-    'recent_submissions' => $db->fetch($recent_submissions_sql)['count']
+    'recent_submissions' => $db->fetch("SELECT COUNT(*) as count FROM form_submissions WHERE submitted_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)")['count']
 ];
 
 // Get recent blog posts
