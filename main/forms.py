@@ -1,11 +1,46 @@
 import logging
 from django import forms
+from django.forms import formset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Blog, FormSubmission
+from .models import Profile, Blog, Contributor, FormSubmission
 
 # Set up logging for form debugging
 logger = logging.getLogger(__name__)
+
+
+class ContributorForm(forms.ModelForm):
+    """Form for managing contributors"""
+    class Meta:
+        model = Contributor
+        fields = ('name', 'email', 'github', 'linkedin')
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Contributor Name',
+                'required': True
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Email (optional)'
+            }),
+            'github': forms.URLInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'GitHub URL (optional)'
+            }),
+            'linkedin': forms.URLInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'LinkedIn URL (optional)'
+            })
+        }
+
+
+# Create a formset for handling multiple contributors
+ContributorFormSet = formset_factory(
+    ContributorForm,
+    extra=1,
+    can_delete=True
+)
 
 
 class SignUpForm(UserCreationForm):

@@ -3,8 +3,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
-from .models import Blog, Profile
-from .forms import SignUpForm, BlogForm, ContactForm, MeetingForm
+from .models import Blog, Profile, Contributor
+from .forms import SignUpForm, BlogForm, ContactForm, MeetingForm, ContributorFormSet
 
 
 # Create your views here.
@@ -111,16 +111,33 @@ def blog_create(request):
     
     if request.method == 'POST':
         form = BlogForm(request.POST, request.FILES)
-        if form.is_valid():
+        contributor_formset = ContributorFormSet(request.POST, prefix='contributors')
+        
+        if form.is_valid() and contributor_formset.is_valid():
             blog = form.save(commit=False)
             blog.author = request.user
             blog.save()
+            
+            # Save contributors
+            for contributor_form in contributor_formset:
+                if contributor_form.cleaned_data and not contributor_form.cleaned_data.get('DELETE', False):
+                    contributor_name = contributor_form.cleaned_data.get('name')
+                    if contributor_name:  # Only save if name is provided
+                        contributor = contributor_form.save(commit=False)
+                        contributor.blog = blog
+                        contributor.save()
+            
             messages.success(request, 'Blog post created successfully!')
             return redirect('blog_detail', blog_id=blog.id)
     else:
         form = BlogForm()
+        contributor_formset = ContributorFormSet(prefix='contributors')
     
-    return render(request, 'blog/blog_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'blog/blog_form.html', {
+        'form': form, 
+        'contributor_formset': contributor_formset,
+        'action': 'Create'
+    })
 
 
 @login_required
@@ -134,14 +151,48 @@ def blog_edit(request, blog_id):
     
     if request.method == 'POST':
         form = BlogForm(request.POST, request.FILES, instance=blog)
-        if form.is_valid():
+        contributor_formset = ContributorFormSet(request.POST, prefix='contributors')
+        
+        if form.is_valid() and contributor_formset.is_valid():
             form.save()
+            
+            # Delete existing contributors and create new ones
+            blog.contributors.all().delete()
+            
+            # Save contributors
+            for contributor_form in contributor_formset:
+                if contributor_form.cleaned_data and not contributor_form.cleaned_data.get('DELETE', False):
+                    contributor_name = contributor_form.cleaned_data.get('name')
+                    if contributor_name:  # Only save if name is provided
+                        contributor = contributor_form.save(commit=False)
+                        contributor.blog = blog
+                        contributor.save()
+            
             messages.success(request, 'Blog post updated successfully!')
             return redirect('blog_detail', blog_id=blog.id)
     else:
         form = BlogForm(instance=blog)
+        # Pre-populate formset with existing contributors
+        initial_contributors = []
+        for contributor in blog.contributors.all():
+            initial_contributors.append({
+                'name': contributor.name,
+                'email': contributor.email,
+                'github': contributor.github,
+                'linkedin': contributor.linkedin
+            })
+        
+        contributor_formset = ContributorFormSet(
+            prefix='contributors', 
+            initial=initial_contributors
+        )
     
-    return render(request, 'blog/blog_form.html', {'form': form, 'blog': blog, 'action': 'Edit'})
+    return render(request, 'blog/blog_form.html', {
+        'form': form, 
+        'contributor_formset': contributor_formset,
+        'blog': blog, 
+        'action': 'Edit'
+    })
 
 
 @login_required

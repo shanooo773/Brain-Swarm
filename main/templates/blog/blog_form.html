@@ -48,6 +48,84 @@
                             {% endif %}
                         </div>
                         
+                        <!-- Contributors Section -->
+                        <div class="mb-4">
+                            <label class="form-label">Contributors</label>
+                            <div class="form-text mb-3">Add contributors who worked on this blog post. At least one contributor name is required if you add any contributor information.</div>
+                            
+                            <div id="contributors-container">
+                                {{ contributor_formset.management_form }}
+                                {% for contributor_form in contributor_formset %}
+                                    <div class="contributor-form mb-3 p-3 border rounded bg-light" data-form-index="{{ forloop.counter0 }}">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="mb-0">Contributor {{ forloop.counter }}</h6>
+                                            <button type="button" class="btn btn-sm btn-outline-danger remove-contributor" title="Remove Contributor">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label small">Name *</label>
+                                                {% for field in contributor_form %}
+                                                    {% if field.name == 'name' %}
+                                                        {{ field }}
+                                                        {% if field.errors %}
+                                                            <div class="text-danger small">{{ field.errors }}</div>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label small">Email</label>
+                                                {% for field in contributor_form %}
+                                                    {% if field.name == 'email' %}
+                                                        {{ field }}
+                                                        {% if field.errors %}
+                                                            <div class="text-danger small">{{ field.errors }}</div>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label small">GitHub URL</label>
+                                                {% for field in contributor_form %}
+                                                    {% if field.name == 'github' %}
+                                                        {{ field }}
+                                                        {% if field.errors %}
+                                                            <div class="text-danger small">{{ field.errors }}</div>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label small">LinkedIn URL</label>
+                                                {% for field in contributor_form %}
+                                                    {% if field.name == 'linkedin' %}
+                                                        {{ field }}
+                                                        {% if field.errors %}
+                                                            <div class="text-danger small">{{ field.errors }}</div>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Hidden delete field -->
+                                        {% for field in contributor_form %}
+                                            {% if field.name == 'DELETE' %}
+                                                {{ field.as_hidden }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <button type="button" id="add-contributor" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-plus-lg"></i> Add Another Contributor
+                            </button>
+                        </div>
+                        
                         <div class="d-flex justify-content-between">
                             <a href="{% if blog %}{% url 'blog_detail' blog.id %}{% else %}{% url 'blog_list' %}{% endif %}" class="btn btn-outline-secondary">
                                 <i class="bi bi-arrow-left"></i> Cancel
@@ -108,5 +186,132 @@ textarea.form-control {
     min-height: 300px;
     resize: vertical;
 }
+
+.contributor-form {
+    transition: all 0.3s ease;
+}
+
+.contributor-form:hover {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let contributorIndex = {{ contributor_formset.total_form_count|default:1 }};
+    const maxForms = {{ contributor_formset.max_num|default:10 }};
+    
+    // Function to update form indices
+    function updateFormIndices() {
+        const forms = document.querySelectorAll('.contributor-form');
+        forms.forEach((form, index) => {
+            form.setAttribute('data-form-index', index);
+            const header = form.querySelector('h6');
+            if (header) {
+                header.textContent = `Contributor ${index + 1}`;
+            }
+            
+            // Update all form fields within this contributor form
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                const name = input.getAttribute('name');
+                if (name) {
+                    const newName = name.replace(/contributors-\d+-/, `contributors-${index}-`);
+                    input.setAttribute('name', newName);
+                    
+                    const id = input.getAttribute('id');
+                    if (id) {
+                        const newId = id.replace(/id_contributors-\d+-/, `id_contributors-${index}-`);
+                        input.setAttribute('id', newId);
+                    }
+                }
+            });
+        });
+        
+        // Update the total forms count
+        const totalFormsInput = document.querySelector('input[name="contributors-TOTAL_FORMS"]');
+        if (totalFormsInput) {
+            totalFormsInput.value = forms.length;
+        }
+    }
+    
+    // Add contributor functionality
+    document.getElementById('add-contributor').addEventListener('click', function() {
+        if (contributorIndex >= maxForms) {
+            alert(`Maximum ${maxForms} contributors allowed.`);
+            return;
+        }
+        
+        // Create a new contributor form
+        const newForm = document.createElement('div');
+        newForm.className = 'contributor-form mb-3 p-3 border rounded bg-light';
+        newForm.setAttribute('data-form-index', contributorIndex);
+        
+        newForm.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="mb-0">Contributor ${contributorIndex + 1}</h6>
+                <button type="button" class="btn btn-sm btn-outline-danger remove-contributor" title="Remove Contributor">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <label class="form-label small">Name *</label>
+                    <input type="text" name="contributors-${contributorIndex}-name" 
+                           id="id_contributors-${contributorIndex}-name" 
+                           class="form-control" placeholder="Contributor Name" required>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label small">Email</label>
+                    <input type="email" name="contributors-${contributorIndex}-email" 
+                           id="id_contributors-${contributorIndex}-email" 
+                           class="form-control" placeholder="Email (optional)">
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label small">GitHub URL</label>
+                    <input type="url" name="contributors-${contributorIndex}-github" 
+                           id="id_contributors-${contributorIndex}-github" 
+                           class="form-control" placeholder="GitHub URL (optional)">
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label small">LinkedIn URL</label>
+                    <input type="url" name="contributors-${contributorIndex}-linkedin" 
+                           id="id_contributors-${contributorIndex}-linkedin" 
+                           class="form-control" placeholder="LinkedIn URL (optional)">
+                </div>
+            </div>
+            
+            <input type="hidden" name="contributors-${contributorIndex}-DELETE" id="id_contributors-${contributorIndex}-DELETE">
+        `;
+        
+        document.getElementById('contributors-container').appendChild(newForm);
+        contributorIndex++;
+        updateFormIndices();
+    });
+    
+    // Remove contributor functionality using event delegation
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-contributor')) {
+            e.preventDefault();
+            const contributorForm = e.target.closest('.contributor-form');
+            if (contributorForm) {
+                // Check if there's only one form left
+                const remainingForms = document.querySelectorAll('.contributor-form').length;
+                if (remainingForms <= 1) {
+                    // Instead of removing the last form, just clear its contents
+                    const inputs = contributorForm.querySelectorAll('input[type="text"], input[type="email"], input[type="url"]');
+                    inputs.forEach(input => input.value = '');
+                } else {
+                    contributorForm.remove();
+                    updateFormIndices();
+                }
+            }
+        }
+    });
+    
+    // Initial index update
+    updateFormIndices();
+});
+</script>
 {% endblock %}
