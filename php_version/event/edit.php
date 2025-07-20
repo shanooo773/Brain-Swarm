@@ -104,7 +104,7 @@ ob_start();
                             <?php if (!empty($event['image'])): ?>
                                 <div class="current-image mb-2">
                                     <p class="text-muted">Current image:</p>
-                                    <img src="<?php echo smartUrl('uploads/event_images/' . $event['image']); ?>" 
+                                    <img src="<?php echo smartUrl('event/uploads/event_images/' . $event['image']); ?>" 
                                          alt="Current event image" 
                                          class="img-thumbnail" 
                                          style="max-width: 200px; max-height: 150px;">
