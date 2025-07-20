@@ -57,6 +57,7 @@
                 <ul class="nav" style="list-style: none; display: flex; gap: 20px; margin-left:0; padding: 0;">
                     {% if user.is_authenticated %}
                         {% if user.profile.is_admin %}
+                            <li><a href="{% url 'admin_dashboard' %}"><i class="fa fa-dashboard"></i> Admin Dashboard</a></li>
                             <li><a href="{% url 'blog_create' %}"><i class="fa fa-plus"></i> New Blog</a></li>
                         {% endif %}
                         <li class="dropdown">

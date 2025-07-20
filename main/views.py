@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
-from .models import Blog, Profile
+from .models import Blog, Profile, FormSubmission
 from .forms import SignUpForm, BlogForm, ContactForm, MeetingForm
 
 
@@ -71,7 +71,24 @@ def sign_up(request):
 
 
 def sign_in(request):
-    """User login view - using Django's built-in authentication"""
+    """Custom user login view with admin dashboard redirect"""
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, f'Welcome back, {user.username}!')
+            
+            # Check if user is admin and redirect to dashboard
+            if is_admin_user(user):
+                return redirect('admin_dashboard')
+            else:
+                return redirect('home')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    
     return render(request, 'auth/sign_in.html')
 
 
@@ -159,3 +176,27 @@ def blog_delete(request, blog_id):
         return redirect('blog_list')
     
     return render(request, 'blog/blog_confirm_delete.html', {'blog': blog})
+
+
+@login_required
+def admin_dashboard(request):
+    """Admin dashboard view - only accessible to admin users"""
+    # Check if user is admin
+    if not is_admin_user(request.user):
+        return HttpResponseForbidden("You don't have permission to access the admin dashboard.")
+    
+    # Get dashboard statistics
+    total_blogs = Blog.objects.count()
+    recent_blogs = Blog.objects.order_by('-created_at')[:5]
+    
+    total_form_submissions = FormSubmission.objects.count()
+    recent_submissions = FormSubmission.objects.order_by('-submitted_at')[:10]
+    
+    context = {
+        'total_blogs': total_blogs,
+        'recent_blogs': recent_blogs,
+        'total_form_submissions': total_form_submissions,
+        'recent_submissions': recent_submissions,
+    }
+    
+    return render(request, 'admin/dashboard.html', context)
