@@ -1,0 +1,113 @@
+FROM osrf/ros:noetic-desktop-full
+
+# Prevent interactive prompts during build
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
+# Set environment variables for VNC
+ENV DISPLAY=:1
+ENV VNC_RESOLUTION=1024x768
+ENV VNC_DEPTH=24
+ENV VNC_PASSWORD=gazebo
+
+# Update package lists and install dependencies
+RUN apt-get update && apt-get install -y \
+    # VNC and GUI dependencies  
+    tightvncserver \
+    fluxbox \
+    supervisor \
+    python3-pip \
+    # Additional GUI utilities
+    x11-utils \
+    xauth \
+    mesa-utils \
+    # Network utilities
+    wget \
+    curl \
+    # Text editor
+    nano \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Gazebo 11 (should already be available in the ROS desktop-full image)
+RUN apt-get update && apt-get install -y \
+    gazebo11 \
+    ros-noetic-gazebo-ros \
+    ros-noetic-gazebo-ros-pkgs \
+    ros-noetic-gazebo-ros-control \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install noVNC and websockify
+RUN pip3 install websockify
+
+# Download and setup noVNC
+RUN mkdir -p /opt && \
+    cd /opt && \
+    wget -q https://github.com/novnc/noVNC/archive/v1.3.0.tar.gz -O novnc.tar.gz && \
+    tar xzf novnc.tar.gz && \
+    mv noVNC-1.3.0 noVNC && \
+    rm novnc.tar.gz && \
+    ln -s /opt/noVNC/vnc.html /opt/noVNC/index.html
+
+# Create VNC directory
+RUN mkdir -p ~/.vnc
+
+# Set VNC password
+RUN echo "${VNC_PASSWORD}" | vncpasswd -f > ~/.vnc/passwd && \
+    chmod 600 ~/.vnc/passwd
+
+# Create VNC startup script
+RUN echo '#!/bin/bash' > ~/.vnc/xstartup && \
+    echo 'export XKL_XMODMAP_DISABLE=1' >> ~/.vnc/xstartup && \
+    echo 'unset SESSION_MANAGER' >> ~/.vnc/xstartup && \
+    echo 'unset DBUS_SESSION_BUS_ADDRESS' >> ~/.vnc/xstartup && \
+    echo 'fluxbox &' >> ~/.vnc/xstartup && \
+    echo 'source /opt/ros/noetic/setup.bash' >> ~/.vnc/xstartup && \
+    echo 'export GAZEBO_MODEL_PATH=/gazebo_workspace/models:/usr/share/gazebo-11/models' >> ~/.vnc/xstartup && \
+    echo 'sleep 5' >> ~/.vnc/xstartup && \
+    echo 'gazebo --verbose' >> ~/.vnc/xstartup && \
+    chmod +x ~/.vnc/xstartup
+
+# Create startup script that handles service startup
+RUN echo '#!/bin/bash' > /start.sh && \
+    echo 'set -e' >> /start.sh && \
+    echo 'export DISPLAY=:1' >> /start.sh && \
+    echo 'source /opt/ros/noetic/setup.bash' >> /start.sh && \
+    echo 'export GAZEBO_MODEL_PATH=/gazebo_workspace/models:/usr/share/gazebo-11/models' >> /start.sh && \
+    echo '' >> /start.sh && \
+    echo '# Start VNC server' >> /start.sh && \
+    echo 'echo "Starting VNC server..."' >> /start.sh && \
+    echo 'vncserver :1 -geometry $VNC_RESOLUTION -depth $VNC_DEPTH -localhost &' >> /start.sh && \
+    echo 'VNC_PID=$!' >> /start.sh && \
+    echo '' >> /start.sh && \
+    echo '# Wait for VNC to start' >> /start.sh && \
+    echo 'sleep 10' >> /start.sh && \
+    echo '' >> /start.sh && \
+    echo '# Start NoVNC' >> /start.sh && \
+    echo 'echo "Starting NoVNC..."' >> /start.sh && \
+    echo 'websockify --web=/opt/noVNC 8080 localhost:5901 &' >> /start.sh && \
+    echo 'NOVNC_PID=$!' >> /start.sh && \
+    echo '' >> /start.sh && \
+    echo 'echo "Services started! Access NoVNC at http://localhost:8080"' >> /start.sh && \
+    echo 'echo "VNC Password: $VNC_PASSWORD"' >> /start.sh && \
+    echo '' >> /start.sh && \
+    echo '# Keep container running' >> /start.sh && \
+    echo 'wait' >> /start.sh && \
+    chmod +x /start.sh
+
+# Create directory for Gazebo models and worlds
+RUN mkdir -p /gazebo_workspace/models /gazebo_workspace/worlds
+
+# Set Gazebo model path
+ENV GAZEBO_MODEL_PATH=/gazebo_workspace/models:/usr/share/gazebo-11/models
+
+# Source ROS setup in bashrc
+RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+
+# Expose VNC and NoVNC ports
+EXPOSE 5901 8080
+
+# Set working directory
+WORKDIR /gazebo_workspace
+
+# Start the services
+CMD ["/start.sh"]
