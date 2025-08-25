@@ -2,7 +2,7 @@
 
 This project provides a complete Gazebo simulation environment accessible via web browser using VNC and NoVNC. Run Gazebo with full GUI on a remote VPS and access it from any browser.
 
-## Quick Start
+## 🚀 Quick Start
 
 ### 1. Build and Run with Docker Compose
 
@@ -20,7 +20,7 @@ docker-compose ps
 
 ### 2. Access Gazebo in Your Browser
 
-Once the container is running:
+Once the container is running (may take 2-3 minutes to fully start):
 
 1. **Open your browser** and navigate to:
    ```
@@ -30,21 +30,25 @@ Once the container is running:
 
 2. **Click "Connect"** in the NoVNC interface
 
-3. **Gazebo will automatically start** with the full GUI interface
+3. **Enter VNC password**: `gazebo` (default)
 
-## Configuration
+4. **Gazebo will start automatically** - wait for the GUI to appear
+
+## ⚙️ Configuration
 
 ### Default Settings
 
-| Setting | Value |
-|---------|-------|
-| VNC Password | `gazebo` |
-| VNC Port | `5901` |
-| NoVNC Web Port | `8080` |
-| Resolution | `1024x768` |
-| Color Depth | `24-bit` |
+| Setting | Value | Description |
+|---------|-------|-------------|
+| VNC Password | `gazebo` | Default password for VNC access |
+| VNC Port | `5901` | Direct VNC client access |
+| NoVNC Web Port | `8080` | Browser-based access |
+| Resolution | `1024x768` | Default screen resolution |
+| Color Depth | `24-bit` | Color depth for VNC |
 
-### Custom VNC Password
+### Customization
+
+#### Custom VNC Password
 
 To set a custom VNC password, modify the `VNC_PASSWORD` environment variable in `docker-compose.yml`:
 
@@ -53,7 +57,7 @@ environment:
   - VNC_PASSWORD=your_secure_password
 ```
 
-### Custom Screen Resolution
+#### Custom Screen Resolution
 
 Change the resolution by updating the `VNC_RESOLUTION` environment variable:
 
@@ -62,6 +66,21 @@ environment:
   - VNC_RESOLUTION=1920x1080  # Full HD
   # or
   - VNC_RESOLUTION=1280x720   # HD
+```
+
+#### Performance Tuning
+
+For better performance on VPS with limited resources:
+
+```yaml
+environment:
+  - VNC_RESOLUTION=800x600    # Lower resolution
+  - VNC_DEPTH=16              # Lower color depth
+deploy:
+  resources:
+    limits:
+      memory: 2G              # Limit memory usage
+      cpus: '1'               # Limit CPU usage
 ```
 
 ## Custom Gazebo Worlds and Models

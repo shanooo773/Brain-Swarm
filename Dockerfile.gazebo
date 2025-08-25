@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM osrf/ros:noetic-desktop-full
 
 # Prevent interactive prompts during build
 ENV DEBIAN_FRONTEND=noninteractive
@@ -10,59 +10,42 @@ ENV VNC_RESOLUTION=1024x768
 ENV VNC_DEPTH=24
 ENV VNC_PASSWORD=gazebo
 
-# Install basic system dependencies and ROS
+# Update package lists and install dependencies
 RUN apt-get update && apt-get install -y \
-    # Basic utilities
-    curl \
-    wget \
-    gnupg2 \
-    lsb-release \
-    software-properties-common \
-    # X11 and VNC dependencies
+    # VNC and GUI dependencies  
     tightvncserver \
     fluxbox \
     supervisor \
     python3-pip \
-    python3-dev \
     # Additional GUI utilities
     x11-utils \
     xauth \
     mesa-utils \
+    # Network utilities
+    wget \
+    curl \
+    # Text editor
+    nano \
     && rm -rf /var/lib/apt/lists/*
 
-# Install ROS Noetic
-RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
-    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
-    apt-get update && \
-    apt-get install -y \
-    ros-noetic-desktop-full \
-    python3-rosdep \
-    python3-rosinstall \
-    python3-rosinstall-generator \
-    python3-wstool \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Initialize rosdep
-RUN rosdep init && rosdep update
-
-# Install Gazebo 11
-RUN sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list' && \
-    wget https://packages.osrfoundation.org/gazebo.key -O - | apt-key add - && \
-    apt-get update && \
-    apt-get install -y \
+# Install Gazebo 11 (should already be available in the ROS desktop-full image)
+RUN apt-get update && apt-get install -y \
     gazebo11 \
-    libgazebo11-dev \
     ros-noetic-gazebo-ros \
     ros-noetic-gazebo-ros-pkgs \
     ros-noetic-gazebo-ros-control \
     && rm -rf /var/lib/apt/lists/*
 
 # Install noVNC and websockify
-RUN pip3 install websockify && \
+RUN pip3 install websockify
+
+# Download and setup noVNC
+RUN mkdir -p /opt && \
     cd /opt && \
-    wget -qO- https://github.com/novnc/noVNC/archive/v1.3.0.tar.gz | tar xz && \
+    wget -q https://github.com/novnc/noVNC/archive/v1.3.0.tar.gz -O novnc.tar.gz && \
+    tar xzf novnc.tar.gz && \
     mv noVNC-1.3.0 noVNC && \
+    rm novnc.tar.gz && \
     ln -s /opt/noVNC/vnc.html /opt/noVNC/index.html
 
 # Create VNC directory
@@ -84,14 +67,31 @@ RUN echo '#!/bin/bash' > ~/.vnc/xstartup && \
     echo 'gazebo --verbose' >> ~/.vnc/xstartup && \
     chmod +x ~/.vnc/xstartup
 
-# Create startup script
+# Create startup script that handles service startup
 RUN echo '#!/bin/bash' > /start.sh && \
+    echo 'set -e' >> /start.sh && \
     echo 'export DISPLAY=:1' >> /start.sh && \
     echo 'source /opt/ros/noetic/setup.bash' >> /start.sh && \
     echo 'export GAZEBO_MODEL_PATH=/gazebo_workspace/models:/usr/share/gazebo-11/models' >> /start.sh && \
+    echo '' >> /start.sh && \
+    echo '# Start VNC server' >> /start.sh && \
+    echo 'echo "Starting VNC server..."' >> /start.sh && \
     echo 'vncserver :1 -geometry $VNC_RESOLUTION -depth $VNC_DEPTH -localhost &' >> /start.sh && \
-    echo 'sleep 5' >> /start.sh && \
-    echo 'websockify --web=/opt/noVNC 8080 localhost:5901' >> /start.sh && \
+    echo 'VNC_PID=$!' >> /start.sh && \
+    echo '' >> /start.sh && \
+    echo '# Wait for VNC to start' >> /start.sh && \
+    echo 'sleep 10' >> /start.sh && \
+    echo '' >> /start.sh && \
+    echo '# Start NoVNC' >> /start.sh && \
+    echo 'echo "Starting NoVNC..."' >> /start.sh && \
+    echo 'websockify --web=/opt/noVNC 8080 localhost:5901 &' >> /start.sh && \
+    echo 'NOVNC_PID=$!' >> /start.sh && \
+    echo '' >> /start.sh && \
+    echo 'echo "Services started! Access NoVNC at http://localhost:8080"' >> /start.sh && \
+    echo 'echo "VNC Password: $VNC_PASSWORD"' >> /start.sh && \
+    echo '' >> /start.sh && \
+    echo '# Keep container running' >> /start.sh && \
+    echo 'wait' >> /start.sh && \
     chmod +x /start.sh
 
 # Create directory for Gazebo models and worlds
