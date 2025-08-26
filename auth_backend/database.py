@@ -99,7 +99,12 @@ class Database:
             """, (username, email, password_hash, full_name))
             
             user_id = cursor.lastrowid
-            return self.get_user_by_id(user_id)
+            
+            # Return the created user immediately
+            row = conn.execute(
+                "SELECT * FROM users WHERE id = ?", (user_id,)
+            ).fetchone()
+            return dict(row) if row else None
     
     def get_user_by_username(self, username: str) -> Optional[Dict[str, Any]]:
         """Get user by username"""
@@ -134,7 +139,12 @@ class Database:
             """, (user_id, service_type, preferred_date, message, phone))
             
             booking_id = cursor.lastrowid
-            return self.get_booking_by_id(booking_id)
+            
+            # Return the created booking immediately
+            row = conn.execute(
+                "SELECT * FROM bookings WHERE id = ?", (booking_id,)
+            ).fetchone()
+            return dict(row) if row else None
     
     def get_booking_by_id(self, booking_id: int) -> Optional[Dict[str, Any]]:
         """Get booking by ID"""

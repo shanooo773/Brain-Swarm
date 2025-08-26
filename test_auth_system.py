@@ -27,9 +27,11 @@ def test_auth_backend():
             return False
         
         # Test sign-up
+        import random
+        random_suffix = random.randint(1000, 9999)
         signup_data = {
-            "username": "testuser",
-            "email": "test@example.com",
+            "username": f"testuser{random_suffix}",
+            "email": f"test{random_suffix}@example.com",
             "password": "testpass123",
             "full_name": "Test User"
         }
@@ -45,7 +47,7 @@ def test_auth_backend():
         
         # Test sign-in
         signin_data = {
-            "username": "testuser",
+            "username": f"testuser{random_suffix}",
             "password": "testpass123"
         }
         
