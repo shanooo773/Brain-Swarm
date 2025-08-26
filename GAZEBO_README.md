@@ -1,52 +1,40 @@
-# Gazebo VNC Simulation Environment
+# Gazebo Simulation Setup
 
-This project provides a complete Gazebo simulation environment accessible via web browser using VNC and NoVNC. Run Gazebo with full GUI on a remote VPS and access it from any browser.
+Detailed setup guide for the Gazebo/ROS simulation environment component of Brain Swarm.
 
-## 🚀 Quick Start
-
-### 1. Build and Run with Docker Compose
+## Quick Start
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd Brain-Swarm
+# Start Gazebo simulation
+docker compose up gazebo
 
-# Build and start the Gazebo simulation
-docker-compose up -d
-
-# Check if services are running
-docker-compose ps
+# Access via browser
+# http://localhost:8080
+# Password: gazebo
 ```
 
-### 2. Access Gazebo in Your Browser
-
-Once the container is running (may take 2-3 minutes to fully start):
-
-1. **Open your browser** and navigate to:
-   ```
-   http://<VPS-IP>:8080
-   ```
-   For local testing: `http://localhost:8080`
-
-2. **Click "Connect"** in the NoVNC interface
-
-3. **Enter VNC password**: `gazebo` (default)
-
-4. **Gazebo will start automatically** - wait for the GUI to appear
-
-## ⚙️ Configuration
-
-### Default Settings
+## Configuration
 
 | Setting | Value | Description |
 |---------|-------|-------------|
-| VNC Password | `gazebo` | Default password for VNC access |
+| Web Access | `http://localhost:8080` | NoVNC browser interface |
 | VNC Port | `5901` | Direct VNC client access |
-| NoVNC Web Port | `8080` | Browser-based access |
+| Password | `gazebo` | Default VNC password |
 | Resolution | `1024x768` | Default screen resolution |
-| Color Depth | `24-bit` | Color depth for VNC |
 
-### Customization
+## Custom Models and Worlds
+
+- **Models**: Place in `./gazebo_data/models/`
+- **Worlds**: Place in `./gazebo_data/worlds/`
+- **Auto-mount**: Files are automatically available in container
+
+## Troubleshooting
+
+- **Container slow to start**: Allow 2-3 minutes for full initialization
+- **GPU acceleration**: Uncomment nvidia-docker lines in docker-compose.yml
+- **Memory issues**: Increase shared memory with `shm_size: '4gb'`
+
+For complete system setup, see main README.md
 
 #### Custom VNC Password
 
