@@ -157,12 +157,12 @@ async def sign_up(user_data: UserSignUp):
 
 @app.post("/auth/signin", response_model=TokenResponse)
 async def sign_in(credentials: UserSignIn):
-    """User authentication"""
+    """User authentication with username or email"""
     user = db.authenticate_user(credentials.username, credentials.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid username or password"
+            detail="Invalid email or password"
         )
     
     if not user["is_active"]:

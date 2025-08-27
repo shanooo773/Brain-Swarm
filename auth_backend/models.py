@@ -20,7 +20,7 @@ class UserSignUp(BaseModel):
 
 
 class UserSignIn(BaseModel):
-    username: str
+    username: str = Field(..., description="Username or email address")
     password: str
 
 

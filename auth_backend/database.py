@@ -114,6 +114,14 @@ class Database:
             ).fetchone()
             return dict(row) if row else None
     
+    def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
+        """Get user by email"""
+        with self.get_connection() as conn:
+            row = conn.execute(
+                "SELECT * FROM users WHERE email = ?", (email,)
+            ).fetchone()
+            return dict(row) if row else None
+    
     def get_user_by_id(self, user_id: int) -> Optional[Dict[str, Any]]:
         """Get user by ID"""
         with self.get_connection() as conn:
@@ -122,9 +130,16 @@ class Database:
             ).fetchone()
             return dict(row) if row else None
     
-    def authenticate_user(self, username: str, password: str) -> Optional[Dict[str, Any]]:
-        """Authenticate user by username and password"""
-        user = self.get_user_by_username(username)
+    def authenticate_user(self, username_or_email: str, password: str) -> Optional[Dict[str, Any]]:
+        """Authenticate user by username/email and password"""
+        # Try to find user by username first
+        user = self.get_user_by_username(username_or_email)
+        
+        # If not found by username, try by email
+        if not user:
+            user = self.get_user_by_email(username_or_email)
+        
+        # Verify password if user is found
         if user and self.verify_password(password, user['password_hash']):
             return user
         return None
