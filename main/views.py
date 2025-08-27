@@ -71,29 +71,15 @@ def sign_up(request):
 
 
 def sign_in(request):
-    """Custom user login view with admin dashboard redirect"""
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, f'Welcome back, {user.username}!')
-            
-            # Check if there's a 'next' parameter in the URL
-            next_url = request.GET.get('next')
-            if next_url:
-                return redirect(next_url)
-            
-            # Check if user is admin and redirect to dashboard
-            if is_admin_user(user):
-                return redirect('admin_dashboard')
-            else:
-                return redirect('home')
+    """Sign-in page - authentication handled by JavaScript/FastAPI"""
+    # If user is already authenticated via existing session, redirect them
+    if request.user.is_authenticated:
+        if is_admin_user(request.user):
+            return redirect('admin_dashboard')
         else:
-            messages.error(request, 'Invalid username or password.')
+            return redirect('home')
     
+    # Simply render the template - JavaScript will handle the authentication
     return render(request, 'auth/sign_in.html')
 
 

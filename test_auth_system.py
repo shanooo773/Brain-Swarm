@@ -47,7 +47,7 @@ def test_auth_backend():
         
         # Test sign-in
         signin_data = {
-            "username": f"testuser{random_suffix}",
+            "email": f"test{random_suffix}@example.com",
             "password": "testpass123"
         }
         
@@ -90,7 +90,7 @@ def test_auth_backend():
         
         # Test admin login (default admin user)
         admin_signin_data = {
-            "username": "admin",
+            "email": "admin@brainswarm.com",
             "password": "admin123"
         }
         

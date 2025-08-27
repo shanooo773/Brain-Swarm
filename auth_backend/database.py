@@ -58,6 +58,30 @@ class Database:
                     INSERT INTO users (username, email, password_hash, full_name, role)
                     VALUES (?, ?, ?, ?, ?)
                 """, ("admin", "admin@brainswarm.com", admin_password, "Administrator", "admin"))
+            
+            # Create demo user if not exists
+            demo_user_exists = conn.execute(
+                "SELECT COUNT(*) FROM users WHERE email = 'demo@brainswarm.com'"
+            ).fetchone()[0]
+            
+            if demo_user_exists == 0:
+                demo_password = self.hash_password("demo123")
+                conn.execute("""
+                    INSERT INTO users (username, email, password_hash, full_name, role)
+                    VALUES (?, ?, ?, ?, ?)
+                """, ("demouser", "demo@brainswarm.com", demo_password, "Demo User", "user"))
+                
+            # Create demo admin if not exists  
+            demo_admin_exists = conn.execute(
+                "SELECT COUNT(*) FROM users WHERE email = 'demoadmin@brainswarm.com'"
+            ).fetchone()[0]
+            
+            if demo_admin_exists == 0:
+                demo_admin_password = self.hash_password("demoadmin123")
+                conn.execute("""
+                    INSERT INTO users (username, email, password_hash, full_name, role)
+                    VALUES (?, ?, ?, ?, ?)
+                """, ("demoadmin", "demoadmin@brainswarm.com", demo_admin_password, "Demo Admin", "admin"))
     
     @contextmanager
     def get_connection(self):
@@ -106,6 +130,14 @@ class Database:
             ).fetchone()
             return dict(row) if row else None
     
+    def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
+        """Get user by email"""
+        with self.get_connection() as conn:
+            row = conn.execute(
+                "SELECT * FROM users WHERE email = ?", (email,)
+            ).fetchone()
+            return dict(row) if row else None
+    
     def get_user_by_username(self, username: str) -> Optional[Dict[str, Any]]:
         """Get user by username"""
         with self.get_connection() as conn:
@@ -122,9 +154,9 @@ class Database:
             ).fetchone()
             return dict(row) if row else None
     
-    def authenticate_user(self, username: str, password: str) -> Optional[Dict[str, Any]]:
-        """Authenticate user by username and password"""
-        user = self.get_user_by_username(username)
+    def authenticate_user(self, email: str, password: str) -> Optional[Dict[str, Any]]:
+        """Authenticate user by email and password"""
+        user = self.get_user_by_email(email)
         if user and self.verify_password(password, user['password_hash']):
             return user
         return None

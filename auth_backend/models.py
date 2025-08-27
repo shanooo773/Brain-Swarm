@@ -20,7 +20,7 @@ class UserSignUp(BaseModel):
 
 
 class UserSignIn(BaseModel):
-    username: str
+    email: str  # Changed from username to email
     password: str
 
 
